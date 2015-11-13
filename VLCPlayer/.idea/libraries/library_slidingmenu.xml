@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="library_slidingmenu">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../lib/android-library-slidingmenu-master/bin/library_slidingmenu.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
