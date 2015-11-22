@@ -17,9 +17,17 @@ import android.widget.TableLayout;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.chaowei.com.rollerfast.R;
+import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
+
 import org.videolan.android.ui.SherlockGridFragment;
 import org.videolan.libvlc.LibVLC;
 import org.videolan.vlc.AudioServiceController;
+import org.videolan.vlc.http.HttpUtil;
+import org.videolan.vlc.model.HomeConfig;
+
+import java.io.IOException;
 
 /**
  * Created by qinchaowei on 2015/11/18.
@@ -36,6 +44,20 @@ public class VideoHomeFragment extends SherlockFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        HttpUtil.httpGetHomeConfig(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                HomeConfig config = HomeConfig.createObject(response.body().string());
+                if(config!=null){
+                    // todo;
+                }
+            }
+        });
     }
 
     @Override
@@ -44,61 +66,7 @@ public class VideoHomeFragment extends SherlockFragment {
         getSherlockActivity().getSupportActionBar().setTitle(R.string.history);
 
         View v = inflater.inflate(R.layout.video_home_layout, container, false);
-        mContentTable = (TableLayout) v.findViewById(android.R.id.content_table);
-        registerForContextMenu(listView);
+//        mContentTable = (TableLayout) v.findViewById(R.id.content_table);
         return v;
     }
-
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v,
-      ContextMenu.ContextMenuInfo menuInfo) {
-        MenuInflater menuInflater = getActivity().getMenuInflater();
-        menuInflater.inflate(R.menu.history_view, menu);
-    }
-
-    @Override
-    public void onListItemClick(ListView l, View v, int p, long id) {
-        playListIndex(p);
-    }
-
-    private void playListIndex(int position) {
-        AudioServiceController audioController = AudioServiceController.getInstance();
-
-        LibVLC.getExistingInstance().setMediaList();
-        audioController.playIndex(position);
-    }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        if (!getUserVisibleHint()) {
-            return super.onContextItemSelected(item);
-        }
-
-        AdapterView.AdapterContextMenuInfo info =
-          (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        if (info == null) // info can be null
-        {
-            return super.onContextItemSelected(item);
-        }
-        int id = item.getItemId();
-
-        if (id == R.id.history_view_play) {
-            playListIndex(info.position);
-            return true;
-        } else if (id == R.id.history_view_delete) {
-            LibVLC.getExistingInstance().getPrimaryMediaList().remove(info.position);
-            mHistoryAdapter.refresh();
-            return true;
-        }
-        return super.onContextItemSelected(item);
-    }
-
-    public void refresh() {
-        Log.d(TAG, "Refreshing view!");
-        if (mHistoryAdapter != null) {
-            mHistoryAdapter.refresh();
-        }
-    }
-
-
 }

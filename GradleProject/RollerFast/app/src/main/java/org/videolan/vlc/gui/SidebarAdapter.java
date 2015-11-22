@@ -63,6 +63,7 @@ public class SidebarAdapter extends BaseAdapter {
 
     static {
         SidebarEntry entries2[] = {
+            new SidebarEntry( "home", R.string.home, R.attr.ic_menu_home ),
             new SidebarEntry( "video", R.string.video, R.attr.ic_menu_video ),
             new SidebarEntry( "audio", R.string.audio, R.attr.ic_menu_audio ),
             new SidebarEntry( "directories", R.string.directories, R.attr.ic_menu_folder ),
@@ -131,7 +132,9 @@ public class SidebarAdapter extends BaseAdapter {
             return mFragments.get(id);
         }
         Fragment f;
-        if(id.equals("audio")) {
+        if(id.equals("home")) {
+            f = new VideoHomeFragment();
+        }else  if(id.equals("audio")) {
             f = new AudioBrowserFragment();
         } else if(id.equals("video")) {
             f = new VideoGridFragment();

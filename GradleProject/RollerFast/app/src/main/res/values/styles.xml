@@ -60,6 +60,7 @@
         <item name="ic_pause">@drawable/ic_pause</item>
         <item name="ic_previous">@drawable/ic_previous</item>
         <item name="ic_next">@drawable/ic_next</item>
+        <item name="ic_menu_home">@drawable/ic_menu_video</item>
         <item name="ic_menu_video">@drawable/ic_menu_video</item>
         <item name="ic_menu_audio">@drawable/ic_menu_audio</item>
         <item name="ic_menu_folder">@drawable/ic_menu_folder</item>

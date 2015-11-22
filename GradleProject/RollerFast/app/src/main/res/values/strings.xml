@@ -75,6 +75,7 @@
     <string name="parent_folder">Up to parent folder</string>
     <string name="audio">Audio</string>
     <string name="video">Video</string>
+    <string name="home">Home</string>
     <string name="bookmarks">Bookmarks</string>
     <string name="equalizer">Equalizer</string>
     <string name="all_albums">All albums</string>
