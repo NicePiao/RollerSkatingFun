@@ -139,14 +139,14 @@ public class MainActivity extends SherlockFragmentActivity {
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {	
-        if (!LibVlcUtil.hasCompatibleCPU(this)) {
-            Log.e(TAG, LibVlcUtil.getErrorMsg());
-            Intent i = new Intent(this, CompatErrorActivity.class);
-            startActivity(i);
-            finish();
-            super.onCreate(savedInstanceState);
-            return;
-        }
+//        if (!LibVlcUtil.hasCompatibleCPU(this)) {
+//            Log.e(TAG, LibVlcUtil.getErrorMsg());
+//            Intent i = new Intent(this, CompatErrorActivity.class);
+//            startActivity(i);
+//            finish();
+//            super.onCreate(savedInstanceState);
+//            return;
+//        }
 
         /* Get the current version from package */
         PackageInfo pinfo = null;
@@ -173,14 +173,14 @@ public class MainActivity extends SherlockFragmentActivity {
             // Start LibVLC
             Util.getLibVlcInstance();
         } catch (LibVlcException e) {
-            e.printStackTrace();
-            Intent i = new Intent(this, CompatErrorActivity.class);
-            i.putExtra("runtimeError", true);
-            i.putExtra("message", "LibVLC failed to initialize (LibVlcException)");
-            startActivity(i);
-            finish();
-            super.onCreate(savedInstanceState);
-            return;
+//            e.printStackTrace();
+//            Intent i = new Intent(this, CompatErrorActivity.class);
+//            i.putExtra("runtimeError", true);
+//            i.putExtra("message", "LibVLC failed to initialize (LibVlcException)");
+//            startActivity(i);
+//            finish();
+//            super.onCreate(savedInstanceState);
+//            return;
         }
 
         super.onCreate(savedInstanceState);

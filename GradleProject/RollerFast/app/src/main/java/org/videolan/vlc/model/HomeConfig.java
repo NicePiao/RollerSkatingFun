@@ -6,6 +6,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 主页配置model
@@ -87,7 +88,7 @@ public class HomeConfig {
         }
 
         try {
-            HomeConfig config = new Gson().fromJson(json.trim(), HomeConfig.class);
+            HomeConfig config = (HomeConfig)(new Gson().fromJson(json.trim(), HomeConfig.class));
             return config;
         } catch (Exception e) {
             Log.d("qcw",e.getMessage());
