@@ -30,7 +30,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
 import com.chaowei.com.rollerfast.R;
+
 import org.videolan.vlc.Util;
 import org.videolan.vlc.VLCApplication;
 import org.videolan.vlc.gui.audio.AudioBrowserFragment;
@@ -63,13 +65,14 @@ public class SidebarAdapter extends BaseAdapter {
 
     static {
         SidebarEntry entries2[] = {
-            new SidebarEntry( "home", R.string.home, R.attr.ic_menu_home ),
-            new SidebarEntry( "video", R.string.video, R.attr.ic_menu_video ),
-            new SidebarEntry( "audio", R.string.audio, R.attr.ic_menu_audio ),
-            new SidebarEntry( "directories", R.string.directories, R.attr.ic_menu_folder ),
-            new SidebarEntry( "history", R.string.history, R.attr.ic_menu_history ),
-            //new SidebarEntry( "bookmarks", R.string.bookmarks, R.drawable.ic_bookmarks ),
-            //new SidebarEntry( "playlists", R.string.playlists, R.drawable.icon ),
+                new SidebarEntry("home", R.string.home, R.attr.ic_menu_home),
+                new SidebarEntry("download", R.string.download, R.attr.ic_menu_download),
+                new SidebarEntry("video", R.string.video, R.attr.ic_menu_video),
+                new SidebarEntry("audio", R.string.audio, R.attr.ic_menu_audio),
+                new SidebarEntry("directories", R.string.directories, R.attr.ic_menu_folder),
+                new SidebarEntry("history", R.string.history, R.attr.ic_menu_history),
+                //new SidebarEntry( "bookmarks", R.string.bookmarks, R.drawable.ic_bookmarks ),
+                //new SidebarEntry( "playlists", R.string.playlists, R.drawable.icon ),
         };
         entries = Arrays.asList(entries2);
     }
@@ -92,7 +95,7 @@ public class SidebarAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        return (long)position; // The SidebarEntry list is unique
+        return (long) position; // The SidebarEntry list is unique
     }
 
     @Override
@@ -100,10 +103,10 @@ public class SidebarAdapter extends BaseAdapter {
         SidebarEntry sidebarEntry = entries.get(position);
 
         /* If view not created */
-        if(v == null) {
+        if (v == null) {
             v = mInflater.inflate(R.layout.sidebar_item, parent, false);
         }
-        TextView textView = (TextView)v;
+        TextView textView = (TextView) v;
         textView.setText(sidebarEntry.name);
         Drawable img = VLCApplication.getAppResources().getDrawable(
                 Util.getResourceFromAttribute(mContext, sidebarEntry.attributeID));
@@ -128,22 +131,23 @@ public class SidebarAdapter extends BaseAdapter {
         // Set the current fragment.
         setCurrentFragment(id);
 
-        if(mFragments.containsKey(id) && mFragments.get(id) != null) {
+        if (mFragments.containsKey(id) && mFragments.get(id) != null) {
             return mFragments.get(id);
         }
         Fragment f;
-        if(id.equals("home")) {
+        if (id.equals("home")) {
             f = new VideoHomeFragment();
-        }else  if(id.equals("audio")) {
+        } else if (id.equals("download")) {
+            f = new VideoDownloadFragment();
+        } else if (id.equals("audio")) {
             f = new AudioBrowserFragment();
-        } else if(id.equals("video")) {
+        } else if (id.equals("video")) {
             f = new VideoGridFragment();
-        } else if(id.endsWith("directories")) {
+        } else if (id.endsWith("directories")) {
             f = new DirectoryViewFragment();
-        } else if(id.equals("history")) {
+        } else if (id.equals("history")) {
             f = new HistoryFragment();
-        }
-        else {
+        } else {
             mCurrentFragmentId = prevFragmentId; // Restore the current fragment id.
             throw new IllegalArgumentException("Wrong fragment id.");
         }
@@ -163,10 +167,10 @@ public class SidebarAdapter extends BaseAdapter {
      * adapter to prevent it from trying to create the same fragment again.
      *
      * @param id ID of the fragment
-     * @param f The fragment itself
+     * @param f  The fragment itself
      */
     public void restoreFragment(String id, Fragment f) {
-        if(f == null) {
+        if (f == null) {
             Log.e(TAG, "Can't set null fragment for " + id + "!");
             return;
         }

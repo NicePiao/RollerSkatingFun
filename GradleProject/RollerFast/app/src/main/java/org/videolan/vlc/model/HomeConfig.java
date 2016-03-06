@@ -88,7 +88,7 @@ public class HomeConfig {
         }
 
         try {
-            HomeConfig config = (HomeConfig)(new Gson().fromJson(json.trim(), HomeConfig.class));
+            HomeConfig config = new Gson().fromJson(json.trim(), HomeConfig.class);
             return config;
         } catch (Exception e) {
             Log.d("qcw",e.getMessage());
