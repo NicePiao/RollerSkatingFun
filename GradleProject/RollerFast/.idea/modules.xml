@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/Android-Download-Manager-Pro-master/Android-Download-Manager-Pro-master.iml" filepath="$PROJECT_DIR$/Android-Download-Manager-Pro-master/Android-Download-Manager-Pro-master.iml" />
       <module fileurl="file://$PROJECT_DIR$/RollerFast.iml" filepath="$PROJECT_DIR$/RollerFast.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>

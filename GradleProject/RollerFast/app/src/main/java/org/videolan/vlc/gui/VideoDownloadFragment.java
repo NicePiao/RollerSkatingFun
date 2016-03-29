@@ -3,6 +3,7 @@
  */
 package org.videolan.vlc.gui;
 
+import android.app.DownloadManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -15,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.chaowei.com.rollerfast.R;
@@ -25,6 +27,8 @@ import com.squareup.okhttp.Response;
 import org.videolan.vlc.AudioServiceController;
 import org.videolan.vlc.http.HttpUtil;
 import org.videolan.vlc.model.HomeConfig;
+import org.videolan.vlc.util.DownloadFileInfoManager;
+import org.videolan.vlc.util.DownloadTool;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -47,6 +51,8 @@ public class VideoDownloadFragment extends SherlockFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
     }
 
     @Override
@@ -58,23 +64,44 @@ public class VideoDownloadFragment extends SherlockFragment {
         mDownloadListView = (ListView) v.findViewById(R.id.download_lv);
         mDownloadAdapter = new DownloadAdapter();
         mDownloadRecords = new ArrayList<DownloadRecord>();
-
+        mDownloadListView.setAdapter(mDownloadAdapter);
         setData(makeTestData());
         return v;
     }
 
     private List<DownloadRecord> makeTestData() {
         List<DownloadRecord> list = new ArrayList<DownloadRecord>();
-        for (int i = 0; i < 10; i++) {
-            DownloadRecord record = new DownloadRecord();
-            record.title = "北平无战事 " + i;
-            list.add(record);
-        }
+
+        DownloadRecord record = new DownloadRecord();
+        record.url = "https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1457276357&di=595c147defdc7e23c032f9daa9932791&src=http://pic31.nipic.com/20130713/4826724_225329401184_2.jpg";
+        record.title = "图片1";
+        list.add(record);
+
+        DownloadRecord record2 = new DownloadRecord();
+        record2.url = "http://img2.3lian.com/2014/f5/99/d/3.jpg";
+        record2.title = "图片2";
+        list.add(record2);
+
+        DownloadRecord record3 = new DownloadRecord();
+        record3.url = "http://pic3.nipic.com/20090615/1412106_072833027_2.jpg";
+        record3.title = "图片3";
+        list.add(record3);
+
+        DownloadRecord record4 = new DownloadRecord();
+        record4.url = "http://img01.taopic.com/140926/318765-140926211P235.jpg";
+        record4.title = "图片4";
+        list.add(record4);
+
+        DownloadRecord record5 = new DownloadRecord();
+        record5.url = "http://pic23.nipic.com/20120911/10781601_165603577148_2.jpg";
+        record5.title = "图片5";
+        list.add(record5);
+
         return list;
     }
 
     public void setData(List<DownloadRecord> downloadRecord) {
-        mDownloadRecords = new ArrayList<DownloadRecord>();
+        mDownloadRecords.clear();
         if (downloadRecord != null) {
             mDownloadRecords.addAll(downloadRecord);
         }
@@ -110,14 +137,39 @@ public class VideoDownloadFragment extends SherlockFragment {
             Button pauseResumeBtn = (Button) view.findViewById(R.id.pause_or_resume);
             Button delBtn = (Button) view.findViewById(R.id.del);
 
-            DownloadRecord record = mDownloadRecords.get(i);
+            final DownloadRecord record = mDownloadRecords.get(i);
             titleTv.setText(record.title);
+
+
+            pauseResumeBtn.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View view) {
+                    int taskId = DownloadTool.getInstance(getActivity()).getTaskId(record.url);
+                    if (taskId != -1) {
+                        DownloadTool.getInstance(getActivity()).togglePauseResume(taskId);
+                    } else {
+                        Toast.makeText(getActivity(), "下载任务还未建立", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
+            delBtn.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View view) {
+                    DownloadTool.getInstance(getActivity()).startDownload(record.url, record.title, record.imgUrl);
+                }
+            });
+
+
             return view;
         }
     }
 
 
     public class DownloadRecord {
+        public String url;
         public String imgUrl;
         public String title;
     }

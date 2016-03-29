@@ -8,6 +8,7 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/Android-Download-Manager-Pro-master" />
             <option value="$PROJECT_DIR$/app" />
           </set>
         </option>
