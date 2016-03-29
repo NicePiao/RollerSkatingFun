@@ -20,6 +20,11 @@ public class DownloadTool {
     public static final int CREATE_DOWNLOAD_TASK_NEW_BUT_FAILED = -3;
     public static final int CREATE_DOWNLOAD_TASK_PARAM_INVALID = -4;
 
+    public static final int FILE_STATE_DOWNLOADING = 0;
+    public static final int FILE_STATE_PUASED = 1;
+    public static final int FILE_STATE_FINISHED = 2;
+    public static final int FILE_STATE_INVALID = 3;
+
 
     private static DownloadTool mDownloadTool;
 
@@ -80,75 +85,107 @@ public class DownloadTool {
     }
 
     /**
-     * 开始一个下载任务
+     * 删除文件：
+     * 1 停止下载线程
+     * 2 删除下载数据库Task内容
+     * 3 删除下载的文件
+     * 4 删除下载文件的Sp数据
      *
-     * @param url      任务网络地址
-     * @param title    任务的title，可为空
-     * @param imageUrl 任务的图片地址，可为空
-     * @return >0启动下载中，并且返回task id；<0有各种标识
+     * @param url 下载文件地址
      */
-    public int startDownload(String url, String title, String imageUrl) {
-        if (TextUtils.isEmpty(url)) {
-            return CREATE_DOWNLOAD_TASK_PARAM_INVALID;
+    public void delete(String url) {
+        ReportStructure reportStructure = getReportStructure(url);
+        if (reportStructure == null) {
+            return;
         }
-
-        ReportStructure rs = getReportStructure(url);
-        if (rs == null) {
-            String name = Md5.getMD5(url);
-            if (TextUtils.isEmpty(name)) {
-                return CREATE_DOWNLOAD_TASK_PARAM_INVALID;
-            }
-
-            int taskId = mDmp.addTask(name, url, false, false);
-            try {
-                mDmp.startDownload(taskId);
-                DownloadFileInfoManager.getInstance(mContext).addInfo(url, title, imageUrl);
-                return taskId;
-            } catch (Exception e) {
-                return CREATE_DOWNLOAD_TASK_NEW_BUT_FAILED;
-            }
-
-        } else {
-            if (rs.getState() == TaskStates.DOWNLOAD_FINISHED) {
-                return CREATE_DOWNLOAD_TASK_DOWNLOADED;
-            } else if (rs.getState() == TaskStates.DOWNLOADING || rs.getState() == TaskStates.END) {
-                return rs.getTaskId();
-            } else {
-                try {
-                    mDmp.startDownload(rs.getTaskId());
-                    return rs.getTaskId();
-                } catch (Exception e) {
-                    return rs.getTaskId();// todo qcw
-                }
-            }
-
-        }
-
-
+        mDmp.delete(reportStructure.getTaskId(),true);
     }
 
-    /**
-     * 下载中的任务状态翻转；
-     *
-     * @param taskId
-     */
-    public boolean togglePauseResume(int taskId) {
-        try {
-            ReportStructure rs = getReportStructure(taskId);
-            if (rs.getState() == TaskStates.DOWNLOADING) {
-                mDmp.pauseDownload(taskId);
-                return true;
-            } else if (rs.getState() == TaskStates.PAUSED || rs.getState() == TaskStates.INIT) {
+    public boolean startDownload(String url) {
+        int taskId = getTaskId(url);
+        if (taskId != -1) {
+            try {
                 mDmp.startDownload(taskId);
                 return true;
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+
         return false;
     }
 
-    public int getTaskId(String url) {
+    public boolean pauseDownload(String url) {
+        int taskId = getTaskId(url);
+        if (taskId != -1) {
+            try {
+                mDmp.pauseDownload(taskId);
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * 获取文件的下载状态
+     *
+     * @param url 文件地址
+     * @return FILE_STATE_**
+     */
+    public int getFileState(String url) {
+        if (TextUtils.isEmpty(url)) {
+            return FILE_STATE_INVALID;
+        }
+
+        ReportStructure structure = getReportStructure(url);
+        if (structure == null) {
+            createTask(url);
+            structure = getReportStructure(url);
+            if (structure == null) {
+                return FILE_STATE_INVALID;
+            }
+        }
+        switch (structure.getState()) {
+            case TaskStates.INIT:
+            case TaskStates.READY:
+            case TaskStates.PAUSED:
+                return FILE_STATE_PUASED;
+            case TaskStates.DOWNLOADING:
+                return FILE_STATE_DOWNLOADING;
+            case TaskStates.DOWNLOAD_FINISHED:
+            case TaskStates.END:
+                return FILE_STATE_FINISHED;
+            default:
+                return FILE_STATE_INVALID;
+        }
+    }
+
+    private int createTask(String url) {
+        String name = createNameFromUrl(url);
+        if (TextUtils.isEmpty(name)) {
+            return -1;
+        }
+        // 覆盖
+        return mDmp.addTask(name, url, true, false);
+    }
+
+    private String createNameFromUrl(String url) {
+        if (TextUtils.isEmpty(url)) {
+            return "";
+        }
+
+        String name = Md5.getMD5(url);
+        int lastDot = url.lastIndexOf('.');
+        if (lastDot != -1) {
+            name += url.substring(lastDot, url.length());
+        }
+        return name;
+    }
+
+    private int getTaskId(String url) {
         ReportStructure rs = getReportStructure(url);
         if (rs != null) {
             return rs.getTaskId();
@@ -158,7 +195,7 @@ public class DownloadTool {
     }
 
     private ReportStructure getReportStructure(String url) {
-        String name = Md5.getMD5(url);
+        String name = createNameFromUrl(url);
         if (TextUtils.isEmpty(name)) {
             return null;
         }
@@ -167,13 +204,11 @@ public class DownloadTool {
             return null;
         }
 
-        ReportStructure rs = mDmp.singleDownloadStatus(task.id);
-        return rs;
+        return getReportStructure(task.id);
     }
 
     private ReportStructure getReportStructure(int taskId) {
-        ReportStructure rs = mDmp.singleDownloadStatus(taskId);
-        return rs;
+        return mDmp.singleDownloadStatus(taskId);
     }
 
 }

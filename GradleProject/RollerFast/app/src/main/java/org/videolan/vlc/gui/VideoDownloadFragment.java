@@ -140,17 +140,29 @@ public class VideoDownloadFragment extends SherlockFragment {
             final DownloadRecord record = mDownloadRecords.get(i);
             titleTv.setText(record.title);
 
+            int fileState = DownloadTool.getInstance(getActivity()).getFileState(record.url);
+            if (fileState == DownloadTool.FILE_STATE_FINISHED) {
+                pauseResumeBtn.setText("已完成");
+            } else if (fileState == DownloadTool.FILE_STATE_DOWNLOADING) {
+                pauseResumeBtn.setText("下载中...");
+            } else if (fileState == DownloadTool.FILE_STATE_PUASED) {
+                pauseResumeBtn.setText("暂停中...");
+            } else {
+                pauseResumeBtn.setText("文件出错");
+            }
+
 
             pauseResumeBtn.setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View view) {
-                    int taskId = DownloadTool.getInstance(getActivity()).getTaskId(record.url);
-                    if (taskId != -1) {
-                        DownloadTool.getInstance(getActivity()).togglePauseResume(taskId);
-                    } else {
-                        Toast.makeText(getActivity(), "下载任务还未建立", Toast.LENGTH_SHORT).show();
+                    int fileState = DownloadTool.getInstance(getActivity()).getFileState(record.url);
+                    if (fileState == DownloadTool.FILE_STATE_DOWNLOADING) {
+                        DownloadTool.getInstance(getActivity()).pauseDownload(record.url);
+                    } else if (fileState == DownloadTool.FILE_STATE_PUASED) {
+                        DownloadTool.getInstance(getActivity()).startDownload(record.url);
                     }
+                    notifyDataSetChanged();
                 }
             });
 
@@ -158,7 +170,8 @@ public class VideoDownloadFragment extends SherlockFragment {
 
                 @Override
                 public void onClick(View view) {
-                    DownloadTool.getInstance(getActivity()).startDownload(record.url, record.title, record.imgUrl);
+                    DownloadTool.getInstance(getActivity()).delete(record.url);
+                    notifyDataSetChanged();
                 }
             });
 
@@ -166,7 +179,6 @@ public class VideoDownloadFragment extends SherlockFragment {
             return view;
         }
     }
-
 
     public class DownloadRecord {
         public String url;

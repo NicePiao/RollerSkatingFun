@@ -47,6 +47,10 @@ public class ReportStructure {
         return id;
     }
 
+    public String getName(){
+        return name;
+    }
+
     public ReportStructure setObjectValues(Task task, List<Chunk> taskChunks){
         this.id = task.id;
         this.name = task.name;

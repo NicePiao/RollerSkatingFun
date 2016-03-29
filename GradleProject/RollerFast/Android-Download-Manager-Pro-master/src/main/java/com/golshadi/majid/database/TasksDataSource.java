@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+
 import com.golshadi.majid.Utils.helper.SqlString;
 import com.golshadi.majid.core.enums.QueueSort;
 import com.golshadi.majid.core.enums.TaskStates;
@@ -21,20 +22,20 @@ public class TasksDataSource {
 
     private SQLiteDatabase database;
 
-    public void openDatabase(DatabaseHelper dbHelper){
+    public void openDatabase(DatabaseHelper dbHelper) {
         database = dbHelper.getWritableDatabase();
     }
 
-    public long insertTask(Task task){
+    public long insertTask(Task task) {
         long id = database
-                    .insert(TABLES.TASKS, null, task.convertToContentValues());
+                .insert(TABLES.TASKS, null, task.convertToContentValues());
 
         return id;
     }
 
-    public boolean update(Task task){
+    public boolean update(Task task) {
         int affectedRow = database
-                .update(TABLES.TASKS, task.convertToContentValues(), TASKS.COLUMN_ID+"="+task.id, null);
+                .update(TABLES.TASKS, task.convertToContentValues(), TASKS.COLUMN_ID + "=" + task.id, null);
 
         if (affectedRow != 0)
             return true;
@@ -42,21 +43,21 @@ public class TasksDataSource {
         return false;
     }
 
-    public List<Task> getTasksInState(int state){
+    public List<Task> getTasksInState(int state) {
         List<Task> tasks = new ArrayList<Task>();
 
         String query;
         if (state < 6)
-        	query = "SELECT * FROM "+TABLES.TASKS+" WHERE "+TASKS.COLUMN_STATE+"="+ SqlString.Int(state);
+            query = "SELECT * FROM " + TABLES.TASKS + " WHERE " + TASKS.COLUMN_STATE + "=" + SqlString.Int(state);
         else
-        	query = "SELECT * FROM "+TABLES.TASKS;
-        
+            query = "SELECT * FROM " + TABLES.TASKS;
+
         Cursor cr = database.rawQuery(query, null);
 
-        if (cr != null){
+        if (cr != null) {
             cr.moveToFirst();
 
-            while ( ! cr.isAfterLast()){
+            while (!cr.isAfterLast()) {
                 Task task = new Task();
                 task.cursorToTask(cr);
                 tasks.add(task);
@@ -69,17 +70,17 @@ public class TasksDataSource {
         return tasks;
     }
 
-    public List<Task> getUnnotifiedCompleted(){
+    public List<Task> getUnnotifiedCompleted() {
         List<Task> completedTasks = new ArrayList<Task>();
 
         // SQLite does not have a separate Boolean storage class. Instead, Boolean values are stored as integers 0 (false) and 1 (true).
-        String query = "SELECT * FROM "+TABLES.TASKS+" WHERE "+TASKS.COLUMN_NOTIFY+" != "+SqlString.Int(1);
+        String query = "SELECT * FROM " + TABLES.TASKS + " WHERE " + TASKS.COLUMN_NOTIFY + " != " + SqlString.Int(1);
         Cursor cr = database.rawQuery(query, null);
 
-        if (cr != null){
+        if (cr != null) {
             cr.moveToFirst();
 
-            while ( ! cr.isAfterLast()){
+            while (!cr.isAfterLast()) {
                 Task task = new Task();
                 task.cursorToTask(cr);
                 completedTasks.add(task);
@@ -92,28 +93,28 @@ public class TasksDataSource {
         return completedTasks;
     }
 
-    public List<Task> getUnCompletedTasks(int priority){
+    public List<Task> getUnCompletedTasks(int priority) {
         List<Task> unCompleted = new ArrayList<Task>();
         String query = "SELECT * FROM " + TABLES.TASKS
                 + " WHERE " + TASKS.COLUMN_STATE + "!=" + SqlString.Int(TaskStates.END);
-        switch (priority){
+        switch (priority) {
             case QueueSort.HighPriority:
-                query += " AND "+TASKS.COLUMN_PRIORITY+"="+SqlString.Int(1);
+                query += " AND " + TASKS.COLUMN_PRIORITY + "=" + SqlString.Int(1);
                 break;
             case QueueSort.LowPriority:
-                query += " AND "+TASKS.COLUMN_PRIORITY+"="+SqlString.Int(0);
+                query += " AND " + TASKS.COLUMN_PRIORITY + "=" + SqlString.Int(0);
                 break;
             case QueueSort.oldestFirst:
-                query += " ORDER BY "+TASKS.COLUMN_ID+" ASC";
+                query += " ORDER BY " + TASKS.COLUMN_ID + " ASC";
                 break;
             case QueueSort.earlierFirst:
-                query += " ORDER BY "+TASKS.COLUMN_ID+" DESC";
+                query += " ORDER BY " + TASKS.COLUMN_ID + " DESC";
                 break;
             case QueueSort.HighToLowPriority:
-                query += " ORDER BY "+TASKS.COLUMN_PRIORITY+" ASC";
+                query += " ORDER BY " + TASKS.COLUMN_PRIORITY + " ASC";
                 break;
             case QueueSort.LowToHighPriority:
-                query += " ORDER BY "+TASKS.COLUMN_PRIORITY+" DESC";
+                query += " ORDER BY " + TASKS.COLUMN_PRIORITY + " DESC";
                 break;
 
         }
@@ -134,36 +135,44 @@ public class TasksDataSource {
     }
 
     public Task getTaskInfo(int id) {
-        String query = "SELECT * FROM " + TABLES.TASKS + " WHERE " + TASKS.COLUMN_ID + "=" +SqlString.Int(id);
+        String query = "SELECT * FROM " + TABLES.TASKS + " WHERE " + TASKS.COLUMN_ID + "=" + SqlString.Int(id);
         Cursor cr = database.rawQuery(query, null);
         Log.d("--------", "raw query");
-        Task task = new Task();
-        if (cr.moveToFirst()) {
-            task.cursorToTask(cr);
+        try {
+            Task task = new Task();
+            if (cr != null && cr.moveToFirst()) {
+                task.cursorToTask(cr);
+                return task;
+            }
+        } finally {
+            if (cr != null) {
+                cr.close();
+            }
+            Log.d("--------", "cr close");
         }
-        cr.close();
-        Log.d("--------", "cr close");
-        return task;
+        return null;
     }
 
-    public Task getTaskInfoWithName(String name){
-        String query = "SELECT * FROM "+TABLES.TASKS+" WHERE "+TASKS.COLUMN_NAME+"="+SqlString.String(name);
+    public Task getTaskInfoWithName(String name) {
+        String query = "SELECT * FROM " + TABLES.TASKS + " WHERE " + TASKS.COLUMN_NAME + "=" + SqlString.String(name);
         Cursor cr = database.rawQuery(query, null);
-        try{
+        try {
             Task task = new Task();
             if (cr != null && cr.moveToFirst()) {
                 task.cursorToTask(cr);
                 return task;
             }
 
-        }finally {
-            cr.close();
+        } finally {
+            if (cr != null) {
+                cr.close();
+            }
         }
 
         return null;
     }
 
-    public boolean delete(int taskID){
+    public boolean delete(int taskID) {
         int affectedRow = database
                 .delete(TABLES.TASKS, TASKS.COLUMN_ID + "=" + SqlString.Int(taskID), null);
 
@@ -174,9 +183,9 @@ public class TasksDataSource {
     }
 
 
-    public boolean containsTask(String name){
+    public boolean containsTask(String name) {
         boolean result = false;
-        String  query = "SELECT * FROM "+ TABLES.TASKS +" WHERE "+ TASKS.COLUMN_NAME+"="+SqlString.String(name);
+        String query = "SELECT * FROM " + TABLES.TASKS + " WHERE " + TASKS.COLUMN_NAME + "=" + SqlString.String(name);
         Cursor cr = database.rawQuery(query, null);
 
         if (cr.getCount() != 0)
@@ -186,15 +195,15 @@ public class TasksDataSource {
         return result;
     }
 
-    public boolean checkUnNotifiedTasks(){
+    public boolean checkUnNotifiedTasks() {
         ContentValues contentValues = new ContentValues();
         contentValues.put(TASKS.COLUMN_NOTIFY, 1);
-        int affectedRows = database.update(TABLES.TASKS, contentValues, TASKS.COLUMN_NOTIFY+"="+SqlString.Int(0), null);
+        int affectedRows = database.update(TABLES.TASKS, contentValues, TASKS.COLUMN_NOTIFY + "=" + SqlString.Int(0), null);
 
-        return affectedRows>0;
+        return affectedRows > 0;
     }
 
-    public void close(){
+    public void close() {
         database.close();
     }
 }
