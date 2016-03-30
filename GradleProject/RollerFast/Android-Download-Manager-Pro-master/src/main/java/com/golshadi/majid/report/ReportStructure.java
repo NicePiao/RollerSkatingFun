@@ -51,6 +51,14 @@ public class ReportStructure {
         return name;
     }
 
+    public String getUrl() {
+        return url;
+    }
+
+    public double getPercent(){
+        return percent;
+    }
+
     public ReportStructure setObjectValues(Task task, List<Chunk> taskChunks){
         this.id = task.id;
         this.name = task.name;

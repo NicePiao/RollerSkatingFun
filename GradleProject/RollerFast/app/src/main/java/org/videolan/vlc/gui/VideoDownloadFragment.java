@@ -3,34 +3,21 @@
  */
 package org.videolan.vlc.gui;
 
-import android.app.DownloadManager;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.actionbarsherlock.app.SherlockFragment;
 import com.chaowei.com.rollerfast.R;
-import com.squareup.okhttp.Callback;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
-
-import org.videolan.vlc.AudioServiceController;
-import org.videolan.vlc.http.HttpUtil;
-import org.videolan.vlc.model.HomeConfig;
-import org.videolan.vlc.util.DownloadFileInfoManager;
+import com.golshadi.majid.report.listener.DownloadManagerListener;
 import org.videolan.vlc.util.DownloadTool;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,10 +25,10 @@ import java.util.List;
  * 下载界面
  * Created by qinchaowei on 2015/11/18.
  */
-public class VideoDownloadFragment extends SherlockFragment {
+public class VideoDownloadFragment extends SherlockFragment implements DownloadManagerListener {
 
-    private ListView mDownloadListView;
-    private DownloadAdapter mDownloadAdapter;
+    private ListView             mDownloadListView;
+    private DownloadAdapter      mDownloadAdapter;
     private List<DownloadRecord> mDownloadRecords;
 
     /* All subclasses of Fragment must include a public empty constructor. */
@@ -51,13 +38,12 @@ public class VideoDownloadFragment extends SherlockFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
+        DownloadTool.getInstance(getActivity()).setDownloadListener(this);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+      Bundle savedInstanceState) {
         getSherlockActivity().getSupportActionBar().setTitle(R.string.history);
 
         View v = inflater.inflate(R.layout.video_download_layout, container, false);
@@ -72,10 +58,7 @@ public class VideoDownloadFragment extends SherlockFragment {
     private List<DownloadRecord> makeTestData() {
         List<DownloadRecord> list = new ArrayList<DownloadRecord>();
 
-        DownloadRecord record = new DownloadRecord();
-        record.url = "https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1457276357&di=595c147defdc7e23c032f9daa9932791&src=http://pic31.nipic.com/20130713/4826724_225329401184_2.jpg";
-        record.title = "图片1";
-        list.add(record);
+//        DownloadRecord record = new DownloadRecord();
 
         DownloadRecord record2 = new DownloadRecord();
         record2.url = "http://img2.3lian.com/2014/f5/99/d/3.jpg";
@@ -87,15 +70,20 @@ public class VideoDownloadFragment extends SherlockFragment {
         record3.title = "图片3";
         list.add(record3);
 
-        DownloadRecord record4 = new DownloadRecord();
-        record4.url = "http://img01.taopic.com/140926/318765-140926211P235.jpg";
-        record4.title = "图片4";
-        list.add(record4);
-
         DownloadRecord record5 = new DownloadRecord();
         record5.url = "http://pic23.nipic.com/20120911/10781601_165603577148_2.jpg";
         record5.title = "图片5";
         list.add(record5);
+
+        DownloadRecord record6 = new DownloadRecord();
+        record6.url = " https://dl.wandoujia.com/files/jupiter/latest/wandoujia-wandoujia_web.apk";
+        record6.title = "文件6";
+        list.add(record6);
+
+        DownloadRecord record7 = new DownloadRecord();
+        record7.url = "http://download.zdworks.com/zdclock/zdclock_latest.apk";
+        record7.title = "文件7";
+        list.add(record7);
 
         return list;
     }
@@ -108,6 +96,84 @@ public class VideoDownloadFragment extends SherlockFragment {
         mDownloadAdapter.notifyDataSetChanged();
     }
 
+    private View getViewFromUrl(String url) {
+        if (TextUtils.isEmpty(url)) {
+            return null;
+        }
+
+        for (int i = 0; i < mDownloadRecords.size(); i++) {
+            DownloadRecord record = mDownloadRecords.get(i);
+            if (url.equals(record.url)) {
+                // 获取当前可以看到的item位置
+                int visiblePosition = mDownloadListView.getFirstVisiblePosition();
+                View view = mDownloadListView.getChildAt(i - visiblePosition);
+                return view;
+            }
+        }
+
+        return null;
+    }
+
+    private void updateItemView(long taskId) {
+        String url = DownloadTool.getInstance(getActivity()).getUrl((int) taskId);
+
+        for (int i = 0; i < mDownloadRecords.size(); i++) {
+            final DownloadRecord record = mDownloadRecords.get(i);
+            if (!TextUtils.isEmpty(url) && url.equals(record.url)) {
+                // 获取当前可以看到的item位置
+                int visiblePosition = mDownloadListView.getFirstVisiblePosition();
+                final View view = mDownloadListView.getChildAt(i - visiblePosition);
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mDownloadAdapter.updateView(view, record);
+                    }
+                });
+                return;
+            }
+        }
+    }
+
+
+    @Override
+    public void OnDownloadStarted(long taskId) {
+        updateItemView(taskId);
+    }
+
+    @Override
+    public void OnDownloadPaused(long taskId) {
+        updateItemView(taskId);
+    }
+
+    @Override
+    public void onDownloadProcess(long taskId, double percent, long downloadedLength) {
+        updateItemView(taskId);
+    }
+
+    @Override
+    public void OnDownloadFinished(long taskId) {
+        updateItemView(taskId);
+    }
+
+    @Override
+    public void OnDownloadRebuildStart(long taskId) {
+        updateItemView(taskId);
+    }
+
+    @Override
+    public void OnDownloadRebuildFinished(long taskId) {
+        updateItemView(taskId);
+    }
+
+    @Override
+    public void OnDownloadCompleted(long taskId) {
+        updateItemView(taskId);
+    }
+
+    @Override
+    public void connectionLost(long taskId) {
+        updateItemView(taskId);
+    }
 
     public class DownloadAdapter extends BaseAdapter {
 
@@ -129,16 +195,28 @@ public class VideoDownloadFragment extends SherlockFragment {
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
             if (view == null) {
-                view = LayoutInflater.from(getActivity()).inflate(R.layout.video_download_list_item, null);
+                view = LayoutInflater.from(getActivity()).inflate(R.layout.video_download_list_item,
+                  null);
             }
-            ImageView iconImage = (ImageView) view.findViewById(R.id.download_icon);// todo net image
+            updateView(view,mDownloadRecords.get(i));
+            return view;
+        }
+
+        public void updateView( View view,final DownloadRecord record) {
+            if (view == null) {
+                return;
+            }
+            ImageView iconImage =
+              (ImageView) view.findViewById(R.id.download_icon);// todo net image
             TextView titleTv = (TextView) view.findViewById(R.id.name);
             TextView progressTv = (TextView) view.findViewById(R.id.progress);
             Button pauseResumeBtn = (Button) view.findViewById(R.id.pause_or_resume);
             Button delBtn = (Button) view.findViewById(R.id.del);
 
-            final DownloadRecord record = mDownloadRecords.get(i);
             titleTv.setText(record.title);
+
+            double percent = DownloadTool.getInstance(getActivity()).getFileProgress(record.url);
+            titleTv.setText((int) percent + "/100");
 
             int fileState = DownloadTool.getInstance(getActivity()).getFileState(record.url);
             if (fileState == DownloadTool.FILE_STATE_FINISHED) {
@@ -151,12 +229,12 @@ public class VideoDownloadFragment extends SherlockFragment {
                 pauseResumeBtn.setText("文件出错");
             }
 
-
             pauseResumeBtn.setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View view) {
-                    int fileState = DownloadTool.getInstance(getActivity()).getFileState(record.url);
+                    int fileState =
+                      DownloadTool.getInstance(getActivity()).getFileState(record.url);
                     if (fileState == DownloadTool.FILE_STATE_DOWNLOADING) {
                         DownloadTool.getInstance(getActivity()).pauseDownload(record.url);
                     } else if (fileState == DownloadTool.FILE_STATE_PUASED) {
@@ -174,9 +252,6 @@ public class VideoDownloadFragment extends SherlockFragment {
                     notifyDataSetChanged();
                 }
             });
-
-
-            return view;
         }
     }
 

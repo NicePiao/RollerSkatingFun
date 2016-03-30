@@ -1,10 +1,8 @@
 package org.videolan.vlc.util;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.text.TextUtils;
 import android.util.Log;
-
 import com.golshadi.majid.core.DownloadManagerPro;
 import com.golshadi.majid.core.enums.TaskStates;
 import com.golshadi.majid.database.elements.Task;
@@ -16,20 +14,22 @@ import com.golshadi.majid.report.listener.DownloadManagerListener;
  */
 public class DownloadTool {
 
-    public static final int CREATE_DOWNLOAD_TASK_DOWNLOADED = -2;
+    public static final int CREATE_DOWNLOAD_TASK_DOWNLOADED     = -2;
     public static final int CREATE_DOWNLOAD_TASK_NEW_BUT_FAILED = -3;
-    public static final int CREATE_DOWNLOAD_TASK_PARAM_INVALID = -4;
+    public static final int CREATE_DOWNLOAD_TASK_PARAM_INVALID  = -4;
 
     public static final int FILE_STATE_DOWNLOADING = 0;
-    public static final int FILE_STATE_PUASED = 1;
-    public static final int FILE_STATE_FINISHED = 2;
-    public static final int FILE_STATE_INVALID = 3;
+    public static final int FILE_STATE_PUASED      = 1;
+    public static final int FILE_STATE_FINISHED    = 2;
+    public static final int FILE_STATE_INVALID     = 3;
 
 
     private static DownloadTool mDownloadTool;
 
     private DownloadManagerPro mDmp;
-    private Context mContext;
+    private Context            mContext;
+
+    private DownloadManagerListener mDownloadListener;
 
     private DownloadTool(Context context) {
         mContext = context;
@@ -38,41 +38,65 @@ public class DownloadTool {
             @Override
             public void OnDownloadStarted(long taskId) {
                 Log.d("qcw", "OnDownloadStarted " + taskId);
+                if (mDownloadListener != null) {
+                    mDownloadListener.OnDownloadStarted(taskId);
+                }
             }
 
             @Override
             public void OnDownloadPaused(long taskId) {
                 Log.d("qcw", "OnDownloadPaused " + taskId);
+                if (mDownloadListener != null) {
+                    mDownloadListener.OnDownloadPaused(taskId);
+                }
             }
 
             @Override
             public void onDownloadProcess(long taskId, double percent, long downloadedLength) {
                 Log.d("qcw", "onDownloadProcess " + taskId);
+                if (mDownloadListener != null) {
+                    mDownloadListener.onDownloadProcess(taskId, percent, downloadedLength);
+                }
             }
 
             @Override
             public void OnDownloadFinished(long taskId) {
                 Log.d("qcw", "OnDownloadFinished " + taskId);
+                if (mDownloadListener != null) {
+                    mDownloadListener.OnDownloadFinished(taskId);
+                }
             }
 
             @Override
             public void OnDownloadRebuildStart(long taskId) {
                 Log.d("qcw", "OnDownloadRebuildStart " + taskId);
+                if (mDownloadListener != null) {
+                    mDownloadListener.OnDownloadRebuildStart(taskId);
+                }
             }
 
             @Override
             public void OnDownloadRebuildFinished(long taskId) {
                 Log.d("qcw", "OnDownloadRebuildFinished " + taskId);
+                if (mDownloadListener != null) {
+                    mDownloadListener.OnDownloadRebuildFinished(taskId);
+                }
             }
 
             @Override
             public void OnDownloadCompleted(long taskId) {
                 Log.d("qcw", "OnDownloadCompleted " + taskId);
+                if (mDownloadListener != null) {
+                    mDownloadListener.OnDownloadCompleted(taskId);
+                }
             }
 
             @Override
             public void connectionLost(long taskId) {
                 Log.d("qcw", "connectionLost " + taskId);
+                if (mDownloadListener != null) {
+                    mDownloadListener.connectionLost(taskId);
+                }
             }
         });
     }
@@ -82,6 +106,13 @@ public class DownloadTool {
             mDownloadTool = new DownloadTool(context);
         }
         return mDownloadTool;
+    }
+
+    /**
+     * 设置监听回调
+     */
+    public void setDownloadListener(DownloadManagerListener listener) {
+        mDownloadListener = listener;
     }
 
     /**
@@ -98,9 +129,12 @@ public class DownloadTool {
         if (reportStructure == null) {
             return;
         }
-        mDmp.delete(reportStructure.getTaskId(),true);
+        mDmp.delete(reportStructure.getTaskId(), true);
     }
 
+    /**
+     * 开始下载
+     */
     public boolean startDownload(String url) {
         int taskId = getTaskId(url);
         if (taskId != -1) {
@@ -115,6 +149,9 @@ public class DownloadTool {
         return false;
     }
 
+    /**
+     * 暂停下载
+     */
     public boolean pauseDownload(String url) {
         int taskId = getTaskId(url);
         if (taskId != -1) {
@@ -161,6 +198,30 @@ public class DownloadTool {
             default:
                 return FILE_STATE_INVALID;
         }
+    }
+
+    /**
+     * 获取文件下载进度
+     */
+    public double getFileProgress(String url) {
+        ReportStructure structure = getReportStructure(url);
+        if (structure != null) {
+            return structure.getPercent();
+        }
+        return 0;
+    }
+
+    /**
+     * 获取下载的Url
+     *
+     * @param taskId 下载地址
+     */
+    public String getUrl(int taskId) {
+        ReportStructure reportStructure = getReportStructure(taskId);
+        if (reportStructure != null) {
+            return reportStructure.getUrl();
+        }
+        return "";
     }
 
     private int createTask(String url) {
