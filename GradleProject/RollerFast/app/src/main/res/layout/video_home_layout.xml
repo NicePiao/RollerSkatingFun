@@ -6,16 +6,43 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-   <!-- <TableLayout
-            android:id="@+id/content_table"
+    <LinearLayout
+            android:id="@+id/empty_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>-->
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_centerInParent="true"
+            android:gravity="center_horizontal"
+            >
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/video_default_pic"
-        />
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="看什么看，什么都没有\n可能是程序员哥哥的服务器忘记续费了=￣ω￣="
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                />
 
+        <Button
+                android:id="@+id/load_data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="点击怒刷"
+                android:layout_marginTop="10dp"
+                />
+    </LinearLayout>
+
+    <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="vertical"
+            >
+        <LinearLayout
+                android:id="@+id/content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                />
+    </ScrollView>
 
 </RelativeLayout>

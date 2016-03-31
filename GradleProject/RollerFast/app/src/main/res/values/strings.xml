@@ -2,7 +2,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Main VLC Interface -->
-    <string name="app_name" translatable="false">Video Ultimate</string>
+    <string name="app_name" translatable="false">SITS</string>
     <string name="widget_name" translatable="false">Video Ultimate</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>

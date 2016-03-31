@@ -44,7 +44,7 @@ public class VideoDownloadFragment extends SherlockFragment implements DownloadM
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
-        getSherlockActivity().getSupportActionBar().setTitle(R.string.history);
+        getSherlockActivity().getSupportActionBar().setTitle(R.string.download);
 
         View v = inflater.inflate(R.layout.video_download_layout, container, false);
         mDownloadListView = (ListView) v.findViewById(R.id.download_lv);

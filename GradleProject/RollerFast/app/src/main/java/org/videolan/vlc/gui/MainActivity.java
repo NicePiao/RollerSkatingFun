@@ -64,10 +64,9 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
-import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.chaowei.com.rollerfast.R;
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import org.videolan.libvlc.LibVlcException;
-import org.videolan.libvlc.LibVlcUtil;
 import org.videolan.vlc.AudioService;
 import org.videolan.vlc.AudioServiceController;
 import org.videolan.vlc.MediaLibrary;
@@ -320,6 +319,7 @@ public class MainActivity extends SherlockFragmentActivity {
         mActionBar = getSupportActionBar();
         mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         mActionBar.setDisplayHomeAsUpEnabled(true);
+        mActionBar.setDisplayUseLogoEnabled(false);
     }
 
     @Override
@@ -465,7 +465,8 @@ public class MainActivity extends SherlockFragmentActivity {
 		if (haverating) {
 						
 		} else {
-			showRateDialog();
+//			showRateDialog();
+            finish();
 			return;
 		}
 		

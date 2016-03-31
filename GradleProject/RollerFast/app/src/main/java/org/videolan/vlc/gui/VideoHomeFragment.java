@@ -6,37 +6,33 @@ package org.videolan.vlc.gui;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.app.SherlockListFragment;
 import com.chaowei.com.rollerfast.R;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
-
 import org.videolan.vlc.AudioServiceController;
 import org.videolan.vlc.http.HttpUtil;
 import org.videolan.vlc.model.HomeConfig;
+import org.videolan.vlc.util.HomeConfigUtil;
 
 import java.io.IOException;
-import java.util.logging.Handler;
 
 /**
+ * 轮滑首页
  * Created by qinchaowei on 2015/11/18.
  */
-public class VideoHomeFragment extends SherlockFragment {
+public class VideoHomeFragment extends SherlockFragment implements View.OnClickListener {
 
     private LinearLayout mContainerView;
+    private View         mEmptyContainer;
+    private View         mRefreshBtn;
 
     /* All subclasses of Fragment must include a public empty constructor. */
     public VideoHomeFragment() {
@@ -45,49 +41,41 @@ public class VideoHomeFragment extends SherlockFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        HttpUtil.httpGetHomeConfig(new Callback() {
-            @Override
-            public void onFailure(Request request, IOException e) {
-
-            }
-
-            @Override
-            public void onResponse(Response response) throws IOException {
-                Log.d("qcw", response.body().toString());
-                final HomeConfig config = HomeConfig.createObject(response.body().string());
-                if (config != null) {
-
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            setData(config);
-                        }
-                    });
-                    Log.d("qcw", "ok");
-                } else {
-                    Log.d("qcw", "fail");
-                }
-            }
-        });
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        getSherlockActivity().getSupportActionBar().setTitle(R.string.history);
+      Bundle savedInstanceState) {
+        getSherlockActivity().getSupportActionBar().setTitle(R.string.home);
 
         View v = inflater.inflate(R.layout.video_home_layout, container, false);
         mContainerView = (LinearLayout) v.findViewById(R.id.content);
+        mEmptyContainer = v.findViewById(R.id.empty_container);
+        mRefreshBtn = v.findViewById(R.id.load_data);
+
+        mRefreshBtn.setOnClickListener(this);
+
+        HomeConfig cachedConfig = HomeConfigUtil.getCachedHomeConfig(getActivity());
+        if (cachedConfig == null) {
+            mEmptyContainer.setVisibility(View.VISIBLE);
+        } else {
+            mEmptyContainer.setVisibility(View.GONE);
+            setData(cachedConfig);
+        }
+        loadDataFromNet();
         return v;
     }
 
-    public void setData(HomeConfig homeConfig) {
-        if (homeConfig == null || homeConfig.getTopic() == null || homeConfig.getTopic().isEmpty()) {
+    private void setData(HomeConfig homeConfig) {
+        if (homeConfig == null || homeConfig.getTopic() == null || homeConfig.getTopic().isEmpty
+          ()) {
             return;
         }
 
+        mContainerView.removeAllViews();
         for (HomeConfig.Topic topicData : homeConfig.getTopic()) {
-            View topicView = LayoutInflater.from(getActivity()).inflate(R.layout.video_grid_layout, null);
+            View topicView =
+              LayoutInflater.from(getActivity()).inflate(R.layout.video_grid_layout, null);
 
             TextView titleTextView = (TextView) topicView.findViewById(R.id.topic_title);
             titleTextView.setText(topicData.getTitle());
@@ -98,7 +86,6 @@ public class VideoHomeFragment extends SherlockFragment {
                 View videoView = line1.getChildAt(i);
                 TextView nameTv = (TextView) videoView.findViewById(R.id.name);
 
-
                 if (topicData.getVideo().size() > i) {
                     HomeConfig.Video videoData = topicData.getVideo().get(i);
                     nameTv.setText(videoData.getName());
@@ -107,9 +94,10 @@ public class VideoHomeFragment extends SherlockFragment {
                         @Override
                         public void onClick(View view) {
                             // todo play
-                            if (view.getTag() != null && !TextUtils.isEmpty((String)view.getTag())) {
+                            if (view.getTag() != null && !TextUtils.isEmpty(
+                              (String) view.getTag())) {
                                 AudioServiceController c = AudioServiceController.getInstance();
-                                String s = (String)view.getTag();
+                                String s = (String) view.getTag();
 
                               /* Use the audio player by default. If a video track is
                                * detected, then it will automatically switch to the video
@@ -118,7 +106,7 @@ public class VideoHomeFragment extends SherlockFragment {
                                * dynamically adapted rather than a simple scan.
                                */
                                 c.load(s, false);
-                            } else{
+                            } else {
                             }
 
                         }
@@ -133,7 +121,6 @@ public class VideoHomeFragment extends SherlockFragment {
             for (int i = 0; i < 3; i++) {
                 View videoView = line2.getChildAt(i);
                 TextView nameTv = (TextView) videoView.findViewById(R.id.name);
-
 
                 if (topicData.getVideo().size() > i + 3) {
                     HomeConfig.Video videoData = topicData.getVideo().get(i + 3);
@@ -152,9 +139,46 @@ public class VideoHomeFragment extends SherlockFragment {
 
             mContainerView.addView(topicView);
         }
+    }
 
+    private void loadDataFromNet() {
+        HttpUtil.httpGetHomeConfig(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                Log.d("qcw", "onFailure");
+                Toast.makeText(getActivity(), "加载数据失败", Toast.LENGTH_SHORT).show();
+            }
 
+            @Override
+            public void onResponse(Response response) throws IOException {
+                final String json = response.body().string();
+                final HomeConfig config = HomeConfig.createObject(json);
+                Log.d("qcw", "onResponse " + json);
+
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (config != null) {
+                            HomeConfigUtil.saveHomeConfig(getActivity(), json);
+                            setData(config);
+                        } else {
+                            Toast.makeText(getActivity(), "加载数据失败", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        });
     }
 
 
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.load_data:
+                loadDataFromNet();
+                break;
+            default:
+                break;
+        }
+    }
 }
