@@ -61,7 +61,6 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 import com.chaowei.com.rollerfast.R;
@@ -576,27 +575,29 @@ public class MainActivity extends SherlockFragmentActivity {
          * is called while the view is created. This can happen
          * any time after onCreate.
          */
-        MenuInflater inflater = getSupportMenuInflater();
-        inflater.inflate(R.menu.media_library, menu);
-        return super.onCreateOptionsMenu(menu);
+//        MenuInflater inflater = getSupportMenuInflater();
+//        inflater.inflate(R.menu.media_library, menu);
+//        return super.onCreateOptionsMenu(menu);
+        return false; // qcw never show
     }
 
     @Override
     public boolean onPrepareOptionsMenu (Menu menu) {
-        Fragment current = getSupportFragmentManager().findFragmentById(R.id.fragment_placeholder);
-        // Disable the sort option if we can't use it on the current fragment.
-        if (current == null || !(current instanceof ISortable)) {
-            menu.findItem(R.id.ml_menu_sortby).setEnabled(false);
-            menu.findItem(R.id.ml_menu_sortby).setVisible(false);
-        }
-        else {
-            menu.findItem(R.id.ml_menu_sortby).setEnabled(true);
-            menu.findItem(R.id.ml_menu_sortby).setVisible(true);
-        }
-        // Enable the clear search history function for the search fragment.
-        if (mCurrentFragment.equals("search"))
-            menu.findItem(R.id.search_clear_history).setVisible(true);
-        return true;
+//        Fragment current = getSupportFragmentManager().findFragmentById(R.id.fragment_placeholder);
+//        // Disable the sort option if we can't use it on the current fragment.
+//        if (current == null || !(current instanceof ISortable)) {
+//            menu.findItem(R.id.ml_menu_sortby).setEnabled(false);
+//            menu.findItem(R.id.ml_menu_sortby).setVisible(false);
+//        }
+//        else {
+//            menu.findItem(R.id.ml_menu_sortby).setEnabled(true);
+//            menu.findItem(R.id.ml_menu_sortby).setVisible(true);
+//        }
+//        // Enable the clear search history function for the search fragment.
+//        if (mCurrentFragment.equals("search"))
+//            menu.findItem(R.id.search_clear_history).setVisible(true);
+//        return true;
+        return false; // qcw never show
     }
 
     @Override

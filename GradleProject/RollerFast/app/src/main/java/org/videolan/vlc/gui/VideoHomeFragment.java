@@ -99,6 +99,11 @@ public class VideoHomeFragment extends SherlockFragment implements View.OnClickL
                                 AudioServiceController c = AudioServiceController.getInstance();
                                 String s = (String) view.getTag();
 
+                                s = "http://main.gslb.ku6.com/s1/f6Fx1o2pMcoC0VycnuwDlg../1459674429193/298549354216c0e0d4c8d0ad4ee16f48/1459827321131/v523/17/41/5006339a755974e5a9a1d654323e59ab-f4v-h264-aac-1067-32-251287.0-34727414-1459669083390-8ed4ec47f88a0d715caaeaa8edbadef9-1-00-00-00.f4v";
+                                s = "http://k.youku.com/player/getFlvPath/sid" +
+                                  "/845984423891020ec2c4f_00/st/flv/fileid/03000208005430B01849631468DEFEC61C5678-3A78-37BA-1971-21A0D4EEA0E7?K=be28ed427747c40d24129018&hd=0&ts=411&pid=65a965fbf632be6f&ymovie=1&r=/3sLngL0Q6CXymAIiF9JUfR5MDecwxp/gSVk/o8apWJ3KUkaGrqktKh7cO9ZZoqYN5iGQUM9dNrj6YzDV+fl4AXEjOQRZG4SyoYwp9M2ypYU7FiQ8xAa6kQeMVpEmnS/ITWAND9KTHbLrZoEDBhLldss1obwkUxeBTTkTuJhwcFdRgMrNoyYVHznmOneDvLM&oip=1019354353&sid=845984423891020ec2c4f&token=9755&did=cb0c6d4f6b515f1902273507c75357b0&ev=1&ctype=20&ep=%2FZEFPmAvoL%2F8JvURVs9HQ9Ab8BBnY%2BDmubPxPbTOehOJADzH%2FL9aKcOrwjSfUf5ykyjoaznvODBCftGPNk9u2SuRPl9RJCSqlcVINqjlbex7qa8j6BgbB51%2BH1Qdt7za";
+                                s = "file:///android_asset/test.mp4";
+
                               /* Use the audio player by default. If a video track is
                                * detected, then it will automatically switch to the video
                                * player. This allows us to support more types of streams
@@ -146,7 +151,13 @@ public class VideoHomeFragment extends SherlockFragment implements View.OnClickL
             @Override
             public void onFailure(Request request, IOException e) {
                 Log.d("qcw", "onFailure");
-                Toast.makeText(getActivity(), "加载数据失败", Toast.LENGTH_SHORT).show();
+                getActivity().runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        Toast.makeText(getActivity(), "加载数据失败", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
 
             @Override
@@ -161,6 +172,7 @@ public class VideoHomeFragment extends SherlockFragment implements View.OnClickL
                         if (config != null) {
                             HomeConfigUtil.saveHomeConfig(getActivity(), json);
                             setData(config);
+                            Toast.makeText(getActivity(), "加载数据成功", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(getActivity(), "加载数据失败", Toast.LENGTH_SHORT).show();
                         }

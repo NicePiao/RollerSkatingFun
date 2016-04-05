@@ -47,7 +47,8 @@
                 android:shadowDy="1"
                 android:shadowRadius="1.5"
                 android:singleLine="true"
-                android:textColor="#FFFFFFFF" />
+                android:textColor="#FFFFFFFF"
+                    />
         </RelativeLayout>
 
         <View

@@ -1549,10 +1549,10 @@ public class VideoPlayerActivity extends Activity implements IVideoPlayer {
         if (!mShowing) {
             mShowing = true;
             if (!mIsLocked) {
-                mOverlayHeader.setVisibility(View.VISIBLE);
+                mOverlayHeader.setVisibility(View.INVISIBLE); // qcw never show
                 mOverlayOption.setVisibility(View.VISIBLE);
                 mPlayPause.setVisibility(View.VISIBLE);
-                mMenu.setVisibility(View.VISIBLE);
+                mMenu.setVisibility(View.INVISIBLE); // qcw nerver show
                 dimStatusBar(false);
             }
             mOverlayProgress.setVisibility(View.VISIBLE);
