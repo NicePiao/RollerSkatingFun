@@ -27,7 +27,7 @@ import org.videolan.libvlc.Media;
 import org.videolan.vlc.AudioServiceController;
 import org.videolan.vlc.MediaDatabase;
 import org.videolan.vlc.MediaLibrary;
-import com.chaowei.com.rollerfast.R;
+import com.qcw.rooler.R;
 import org.videolan.vlc.gui.video.VideoPlayerActivity;
 
 import com.actionbarsherlock.app.SherlockListFragment;

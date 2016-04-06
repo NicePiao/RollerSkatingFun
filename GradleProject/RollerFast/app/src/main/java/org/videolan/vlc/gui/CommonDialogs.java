@@ -36,7 +36,7 @@ import android.view.WindowManager.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.chaowei.com.rollerfast.R;
+import com.qcw.rooler.R;
 import org.videolan.vlc.Util;
 import org.videolan.vlc.VlcRunnable;
 import org.videolan.vlc.interfaces.OnExpandableListener;

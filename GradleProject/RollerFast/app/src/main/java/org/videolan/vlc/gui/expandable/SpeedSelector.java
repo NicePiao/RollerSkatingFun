@@ -21,7 +21,7 @@
 package org.videolan.vlc.gui.expandable;
 
 import org.videolan.libvlc.LibVLC;
-import com.chaowei.com.rollerfast.R;
+import com.qcw.rooler.R;
 import org.videolan.vlc.Util;
 import org.videolan.vlc.widget.ExpandableLayout;
 

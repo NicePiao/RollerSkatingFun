@@ -37,7 +37,7 @@ import android.view.View;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.EditText;
 import android.widget.ListView;
-import com.chaowei.com.rollerfast.R;
+import com.qcw.rooler.R;
 import org.videolan.libvlc.Media;
 import org.videolan.vlc.MediaDatabase;
 import org.videolan.vlc.Util;

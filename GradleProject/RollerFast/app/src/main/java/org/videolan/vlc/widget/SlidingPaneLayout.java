@@ -44,7 +44,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.accessibility.AccessibilityEvent;
-import com.chaowei.com.rollerfast.R;
+import com.qcw.rooler.R;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;

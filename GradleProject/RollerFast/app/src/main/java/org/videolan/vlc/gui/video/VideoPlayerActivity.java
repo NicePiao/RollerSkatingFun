@@ -45,7 +45,7 @@ import org.videolan.libvlc.LibVlcUtil;
 import org.videolan.libvlc.Media;
 import org.videolan.vlc.AudioServiceController;
 import org.videolan.vlc.MediaDatabase;
-import com.chaowei.com.rollerfast.R;
+import com.qcw.rooler.R;
 import org.videolan.vlc.Util;
 import org.videolan.vlc.VLCApplication;
 import org.videolan.vlc.WeakHandler;

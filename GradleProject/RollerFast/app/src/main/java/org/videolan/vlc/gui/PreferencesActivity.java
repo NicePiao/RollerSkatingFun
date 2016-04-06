@@ -26,7 +26,7 @@ import org.videolan.vlc.AudioService;
 import org.videolan.vlc.AudioServiceController;
 import org.videolan.vlc.BitmapCache;
 import org.videolan.vlc.MediaDatabase;
-import com.chaowei.com.rollerfast.R;
+import com.qcw.rooler.R;
 import org.videolan.vlc.Util;
 import org.videolan.vlc.VLCApplication;
 import org.videolan.vlc.gui.audio.AudioUtil;

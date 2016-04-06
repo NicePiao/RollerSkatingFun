@@ -20,7 +20,7 @@
 
 package org.videolan.vlc.widget;
 
-import com.chaowei.com.rollerfast.R;
+import com.qcw.rooler.R;
 
 import android.content.Context;
 import android.content.res.TypedArray;

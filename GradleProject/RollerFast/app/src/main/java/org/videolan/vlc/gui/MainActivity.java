@@ -63,7 +63,7 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
-import com.chaowei.com.rollerfast.R;
+import com.qcw.rooler.R;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import org.videolan.libvlc.LibVlcException;
 import org.videolan.vlc.AudioService;

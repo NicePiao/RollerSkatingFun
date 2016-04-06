@@ -2,7 +2,9 @@
   ~ Copyright (C) 2015 Baidu, Inc. All Rights Reserved.
   -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.chaowei.com.rollerfast">
+          package="com.qcw.rooler"
+          android:versionName="1.0.0"
+        >
 
 
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />

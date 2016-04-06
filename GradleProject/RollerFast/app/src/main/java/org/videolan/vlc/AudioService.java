@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Stack;
 
-import com.chaowei.com.rollerfast.R;
+import com.qcw.rooler.R;
 import org.videolan.libvlc.EventHandler;
 import org.videolan.libvlc.LibVLC;
 import org.videolan.libvlc.LibVlcException;

@@ -33,7 +33,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.chaowei.com.rollerfast.R;
+import com.qcw.rooler.R;
 import org.videolan.libvlc.Media;
 import org.videolan.vlc.Util;
 import org.videolan.vlc.widget.AudioPlaylistItemViewGroup;

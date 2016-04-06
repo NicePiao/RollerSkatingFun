@@ -20,7 +20,7 @@
 
 package org.videolan.vlc.gui.audio.widget;
 
-import com.chaowei.com.rollerfast.R;
+import com.qcw.rooler.R;
 import org.videolan.vlc.widget.AnimatedCoverView;
 import org.videolan.vlc.widget.AudioMediaSwitcher;
 

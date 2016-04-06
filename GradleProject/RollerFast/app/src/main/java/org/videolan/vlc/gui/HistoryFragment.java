@@ -22,7 +22,7 @@ package org.videolan.vlc.gui;
 
 import org.videolan.libvlc.LibVLC;
 import org.videolan.vlc.AudioServiceController;
-import com.chaowei.com.rollerfast.R;
+import com.qcw.rooler.R;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;

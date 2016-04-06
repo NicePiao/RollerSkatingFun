@@ -22,7 +22,7 @@ package org.videolan.vlc;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
-import com.chaowei.com.rollerfast.R;
+import com.qcw.rooler.R;
 
 /**
  * A small callback helper class to make running callbacks in threads easier

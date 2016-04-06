@@ -49,7 +49,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.TextView;
-import com.chaowei.com.rollerfast.R;
+import com.qcw.rooler.R;
 import org.videolan.android.ui.SherlockGridFragment;
 import org.videolan.libvlc.LibVlcUtil;
 import org.videolan.libvlc.Media;

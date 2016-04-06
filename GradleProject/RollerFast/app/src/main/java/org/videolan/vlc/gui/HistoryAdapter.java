@@ -24,7 +24,7 @@ import org.videolan.libvlc.EventHandler;
 import org.videolan.libvlc.LibVLC;
 import org.videolan.libvlc.LibVlcException;
 import org.videolan.libvlc.Media;
-import com.chaowei.com.rollerfast.R;
+import com.qcw.rooler.R;
 import org.videolan.vlc.VLCApplication;
 import org.videolan.vlc.WeakHandler;
 import org.videolan.vlc.gui.audio.AudioUtil;

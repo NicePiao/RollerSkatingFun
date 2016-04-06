@@ -24,7 +24,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
-import com.chaowei.com.rollerfast.R;
+import com.qcw.rooler.R;
 import kankan.wheel.widget.WheelView;
 import kankan.wheel.widget.adapters.NumericWheelAdapter;
 import org.videolan.libvlc.LibVLC;

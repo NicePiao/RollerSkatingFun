@@ -21,7 +21,7 @@
 package org.videolan.vlc.widget;
 
 import org.videolan.libvlc.LibVlcUtil;
-import com.chaowei.com.rollerfast.R;
+import com.qcw.rooler.R;
 
 import android.annotation.TargetApi;
 import android.app.PendingIntent;

@@ -20,7 +20,7 @@
 
 package org.videolan.vlc.gui.audio;
 
-import com.chaowei.com.rollerfast.R;
+import com.qcw.rooler.R;
 import org.videolan.vlc.Util;
 
 import android.content.Context;

@@ -21,7 +21,7 @@
 package org.videolan.vlc.gui.video;
 
 import org.videolan.libvlc.TrackInfo;
-import com.chaowei.com.rollerfast.R;
+import com.qcw.rooler.R;
 
 import android.content.Context;
 import android.content.res.Resources;

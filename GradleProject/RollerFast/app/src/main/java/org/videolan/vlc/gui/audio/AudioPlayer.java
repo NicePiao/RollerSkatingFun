@@ -28,7 +28,7 @@ import android.content.Intent;
 import org.videolan.libvlc.LibVLC;
 import org.videolan.libvlc.Media;
 import org.videolan.vlc.AudioServiceController;
-import com.chaowei.com.rollerfast.R;
+import com.qcw.rooler.R;
 import org.videolan.vlc.RepeatType;
 import org.videolan.vlc.Util;
 import org.videolan.vlc.gui.CommonDialogs;

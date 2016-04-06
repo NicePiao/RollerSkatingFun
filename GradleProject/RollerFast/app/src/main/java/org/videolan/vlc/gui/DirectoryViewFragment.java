@@ -38,7 +38,7 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import com.actionbarsherlock.app.SherlockListFragment;
-import com.chaowei.com.rollerfast.R;
+import com.qcw.rooler.R;
 import org.videolan.libvlc.LibVLC;
 import org.videolan.vlc.AudioServiceController;
 import org.videolan.vlc.Util;

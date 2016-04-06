@@ -32,7 +32,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import com.chaowei.com.rollerfast.R;
+import com.qcw.rooler.R;
 import org.videolan.libvlc.Media;
 import org.videolan.vlc.BitmapCache;
 import org.videolan.vlc.MediaGroup;

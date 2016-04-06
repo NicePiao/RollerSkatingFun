@@ -31,8 +31,11 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.chaowei.com.rollerfast.R;
+import com.qcw.rooler.R;
 
+import com.qcw.rooler.ui.VideoDownloadFragment;
+import com.qcw.rooler.ui.VideoHomeFragment;
+import com.qcw.rooler.ui.VideoSettingFragment;
 import org.videolan.vlc.Util;
 import org.videolan.vlc.VLCApplication;
 import org.videolan.vlc.gui.audio.AudioBrowserFragment;
@@ -65,8 +68,9 @@ public class SidebarAdapter extends BaseAdapter {
 
     static {
         SidebarEntry entries2[] = {
-                new SidebarEntry("home", R.string.home, R.attr.ic_menu_home),
-                new SidebarEntry("download", R.string.download, R.attr.ic_menu_home),
+          new SidebarEntry("home", R.string.home,R.attr.ic_menu_home),
+          new SidebarEntry("download", R.string.download,R.attr.ic_menu_home),
+          new SidebarEntry("setting", R.string.setting, R.attr.ic_menu_home),
 //                new SidebarEntry("video", R.string.video, R.attr.ic_menu_video),
 //                new SidebarEntry("audio", R.string.audio, R.attr.ic_menu_audio),
 //                new SidebarEntry("directories", R.string.directories, R.attr.ic_menu_folder),
@@ -139,6 +143,8 @@ public class SidebarAdapter extends BaseAdapter {
             f = new VideoHomeFragment();
         } else if (id.equals("download")) {
             f = new VideoDownloadFragment();
+        } else if (id.equals("setting")) {
+            f = new VideoSettingFragment();
         } else if (id.equals("audio")) {
             f = new AudioBrowserFragment();
         } else if (id.equals("video")) {

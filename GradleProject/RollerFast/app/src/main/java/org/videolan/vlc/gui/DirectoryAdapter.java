@@ -30,7 +30,7 @@ import java.util.regex.Pattern;
 
 import org.videolan.libvlc.LibVLC;
 import org.videolan.libvlc.Media;
-import com.chaowei.com.rollerfast.R;
+import com.qcw.rooler.R;
 import org.videolan.vlc.Util;
 import org.videolan.vlc.VLCApplication;
 
