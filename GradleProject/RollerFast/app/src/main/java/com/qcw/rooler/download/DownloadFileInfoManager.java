@@ -1,4 +1,4 @@
-package com.qcw.rooler.util;
+package com.qcw.rooler.download;
 
 import android.content.Context;
 import android.content.SharedPreferences;

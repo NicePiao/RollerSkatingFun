@@ -10,10 +10,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockFragment;
-import com.golshadi.majid.report.listener.DownloadManagerListener;
 import com.qcw.rooler.R;
+import com.qcw.rooler.download.DownloadTool;
 import com.qcw.rooler.http.HttpUtil;
-import com.qcw.rooler.util.DownloadTool;
 import com.qcw.rooler.util.SettingManager;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
@@ -66,60 +65,60 @@ public class VideoSettingFragment extends SherlockFragment implements View.OnCli
                     downloadTool.delete(apkPath);
                     downloadTool.getFileState(apkPath);
                     downloadTool.startDownload(apkPath);
-                    downloadTool.setDownloadListener(new DownloadManagerListener() {
-
-
-                        private void updateState() {
-                            getActivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    double percent = downloadTool.getFileProgress(apkPath);
-                                    mProgressTv.setText((int) percent + "/100");
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void OnDownloadStarted(long taskId) {
-                            updateState();
-                        }
-
-                        @Override
-                        public void OnDownloadPaused(long taskId) {
-                            updateState();
-                        }
-
-                        @Override
-                        public void onDownloadProcess(long taskId, double percent,
-                          long downloadedLength) {
-                            updateState();
-                        }
-
-                        @Override
-                        public void OnDownloadFinished(long taskId) {
-                            updateState();
-                        }
-
-                        @Override
-                        public void OnDownloadRebuildStart(long taskId) {
-                            updateState();
-                        }
-
-                        @Override
-                        public void OnDownloadRebuildFinished(long taskId) {
-                            updateState();
-                        }
-
-                        @Override
-                        public void OnDownloadCompleted(long taskId) {
-                            updateState();
-                        }
-
-                        @Override
-                        public void connectionLost(long taskId) {
-                            updateState();
-                        }
-                    });
+//                    downloadTool.setDownloadListener(new DownloadManagerListener() {
+//
+//
+//                        private void updateState() {
+//                            getActivity().runOnUiThread(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    double percent = downloadTool.getFileProgress(apkPath);
+//                                    mProgressTv.setText((int) percent + "/100");
+//                                }
+//                            });
+//                        }
+//
+//                        @Override
+//                        public void OnDownloadStarted(long taskId) {
+//                            updateState();
+//                        }
+//
+//                        @Override
+//                        public void OnDownloadPaused(long taskId) {
+//                            updateState();
+//                        }
+//
+//                        @Override
+//                        public void onDownloadProcess(long taskId, double percent,
+//                          long downloadedLength) {
+//                            updateState();
+//                        }
+//
+//                        @Override
+//                        public void OnDownloadFinished(long taskId) {
+//                            updateState();
+//                        }
+//
+//                        @Override
+//                        public void OnDownloadRebuildStart(long taskId) {
+//                            updateState();
+//                        }
+//
+//                        @Override
+//                        public void OnDownloadRebuildFinished(long taskId) {
+//                            updateState();
+//                        }
+//
+//                        @Override
+//                        public void OnDownloadCompleted(long taskId) {
+//                            updateState();
+//                        }
+//
+//                        @Override
+//                        public void connectionLost(long taskId) {
+//                            updateState();
+//                        }
+//                    });
                 } else {
                     Toast.makeText(getActivity(), "已经是最新版本", Toast.LENGTH_SHORT).show();
                 }

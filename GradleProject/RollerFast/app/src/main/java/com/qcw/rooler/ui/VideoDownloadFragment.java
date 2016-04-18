@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.golshadi.majid.report.listener.DownloadManagerListener;
 import com.qcw.rooler.R;
-import com.qcw.rooler.util.DownloadTool;
+import com.qcw.rooler.download.DownloadTool;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +38,7 @@ public class VideoDownloadFragment extends SherlockFragment implements DownloadM
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        DownloadTool.getInstance(getActivity()).setDownloadListener(this);
+//        DownloadTool.getInstance(getActivity()).setDownloadListener(this);
 
 
     }

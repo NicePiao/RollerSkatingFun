@@ -9,77 +9,18 @@
             android:id="@+id/topic_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="平花精髓"
             android:textSize="18dp"
             android:layout_marginLeft="5dp"
             android:paddingTop="15dp"
             android:paddingBottom="5dp"
             />
 
-    <LinearLayout
-            android:id="@+id/line1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-        <include
-                android:layout_width="0dp"
-                android:layout_height="150dp"
-                android:layout_weight="1"
-                layout="@layout/video_item"
-                />
-
-        <include
-                android:layout_width="0dp"
-                android:layout_height="150dp"
-                android:layout_weight="1"
-                layout="@layout/video_item"
-                android:layout_marginLeft="5dp"
-                />
-
-        <include
-                android:layout_width="0dp"
-                android:layout_height="150dp"
-                android:layout_weight="1"
-                layout="@layout/video_item"
-                android:layout_marginLeft="5dp"
-                />
-
-    </LinearLayout>
-
-
-    <LinearLayout
-            android:id="@+id/line2"
+    <GridLayout
+            android:id="@+id/grid_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="5dp"
-            >
-
-
-        <include
-                android:layout_width="0dp"
-                android:layout_height="150dp"
-                android:layout_weight="1"
-                layout="@layout/video_item"/>
-
-        <include
-                android:layout_width="0dp"
-                android:layout_height="150dp"
-                android:layout_weight="1"
-                layout="@layout/video_item"
-                android:layout_marginLeft="5dp"
-                />
-
-        <include
-                android:layout_width="0dp"
-                android:layout_height="150dp"
-                android:layout_weight="1"
-                layout="@layout/video_item"
-                android:layout_marginLeft="5dp"
-                />
-
-    </LinearLayout>
+            />
 
 
 </LinearLayout>

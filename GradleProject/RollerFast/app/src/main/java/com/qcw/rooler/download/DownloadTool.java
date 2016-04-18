@@ -1,13 +1,12 @@
-package com.qcw.rooler.util;
+package com.qcw.rooler.download;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
 import com.golshadi.majid.core.DownloadManagerPro;
 import com.golshadi.majid.core.enums.TaskStates;
 import com.golshadi.majid.database.elements.Task;
 import com.golshadi.majid.report.ReportStructure;
-import com.golshadi.majid.report.listener.DownloadManagerListener;
+import com.qcw.rooler.util.Md5;
 
 /**
  * Created by qinchaowei on 16/3/6.
@@ -23,82 +22,15 @@ public class DownloadTool {
     public static final int FILE_STATE_FINISHED    = 2;
     public static final int FILE_STATE_INVALID     = 3;
 
-
     private static DownloadTool mDownloadTool;
 
     private DownloadManagerPro mDmp;
     private Context            mContext;
 
-    private DownloadManagerListener mDownloadListener;
-
     private DownloadTool(Context context) {
         mContext = context;
         mDmp = new DownloadManagerPro(context);
-        mDmp.init("RoolerApp", 10, new DownloadManagerListener() {
-            @Override
-            public void OnDownloadStarted(long taskId) {
-                Log.d("qcw", "OnDownloadStarted " + taskId);
-                if (mDownloadListener != null) {
-                    mDownloadListener.OnDownloadStarted(taskId);
-                }
-            }
-
-            @Override
-            public void OnDownloadPaused(long taskId) {
-                Log.d("qcw", "OnDownloadPaused " + taskId);
-                if (mDownloadListener != null) {
-                    mDownloadListener.OnDownloadPaused(taskId);
-                }
-            }
-
-            @Override
-            public void onDownloadProcess(long taskId, double percent, long downloadedLength) {
-                Log.d("qcw", "onDownloadProcess " + taskId);
-                if (mDownloadListener != null) {
-                    mDownloadListener.onDownloadProcess(taskId, percent, downloadedLength);
-                }
-            }
-
-            @Override
-            public void OnDownloadFinished(long taskId) {
-                Log.d("qcw", "OnDownloadFinished " + taskId);
-                if (mDownloadListener != null) {
-                    mDownloadListener.OnDownloadFinished(taskId);
-                }
-            }
-
-            @Override
-            public void OnDownloadRebuildStart(long taskId) {
-                Log.d("qcw", "OnDownloadRebuildStart " + taskId);
-                if (mDownloadListener != null) {
-                    mDownloadListener.OnDownloadRebuildStart(taskId);
-                }
-            }
-
-            @Override
-            public void OnDownloadRebuildFinished(long taskId) {
-                Log.d("qcw", "OnDownloadRebuildFinished " + taskId);
-                if (mDownloadListener != null) {
-                    mDownloadListener.OnDownloadRebuildFinished(taskId);
-                }
-            }
-
-            @Override
-            public void OnDownloadCompleted(long taskId) {
-                Log.d("qcw", "OnDownloadCompleted " + taskId);
-                if (mDownloadListener != null) {
-                    mDownloadListener.OnDownloadCompleted(taskId);
-                }
-            }
-
-            @Override
-            public void connectionLost(long taskId) {
-                Log.d("qcw", "connectionLost " + taskId);
-                if (mDownloadListener != null) {
-                    mDownloadListener.connectionLost(taskId);
-                }
-            }
-        });
+        mDmp.init("RoolerApp", 10, DownloadInfoCenter.getInstance(context));
     }
 
     public static synchronized DownloadTool getInstance(Context context) {
@@ -106,13 +38,6 @@ public class DownloadTool {
             mDownloadTool = new DownloadTool(context);
         }
         return mDownloadTool;
-    }
-
-    /**
-     * 设置监听回调
-     */
-    public void setDownloadListener(DownloadManagerListener listener) {
-        mDownloadListener = listener;
     }
 
     /**
@@ -223,6 +148,14 @@ public class DownloadTool {
         }
         return "";
     }
+
+    /**
+     * 文件是否下载过了
+     */
+    public boolean isFileDownloaded(String url){
+        return getFileState(url) == FILE_STATE_FINISHED;
+    }
+
 
     private int createTask(String url) {
         String name = createNameFromUrl(url);
