@@ -74,6 +74,19 @@
             android:textSize="36sp"
             android:visibility="invisible" />
 
+        <com.qcw.rooler.ui.widget.DownloadView
+                android:id="@+id/player_overlay_download_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:onClick="onDonwloadClick"
+                android:layout_alignParentTop="true"
+                android:padding="10dp"
+                android:background="#00ffff"
+                android:textSize="20dp"
+                />
+
+
         <LinearLayout
             android:id="@+id/player_overlay_header"
             android:layout_width="fill_parent"
@@ -229,6 +242,7 @@
                 android:onClick="showAdvancedOptions"
                 android:visibility="gone"
                     />
+
         </RelativeLayout>
     </RelativeLayout>
 

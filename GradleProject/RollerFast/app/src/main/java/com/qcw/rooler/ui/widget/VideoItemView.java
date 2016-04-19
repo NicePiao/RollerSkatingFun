@@ -76,17 +76,6 @@ public class VideoItemView extends RelativeLayout implements View.OnClickListene
             AudioServiceController c = AudioServiceController.getInstance();
 
             String playUrl = mVideoData.getUrl(); // todo qcw
-            playUrl = "http://k.youku.com/player/getFlvPath/sid" +
-              "/845984423891020ec2c4f_00/st/flv/fileid/03000208005430B01849631468DEFEC61C5678" +
-              "-3A78-37BA-1971-21A0D4EEA0E7?K=be28ed427747c40d24129018&hd=0&ts=411&pid" +
-              "=65a965fbf632be6f&ymovie=1&r=/3sLngL0Q6CXymAIiF9JUfR5MDecwxp/gSVk" +
-              "/o8apWJ3KUkaGrqktKh7cO9ZZoqYN5iGQUM9dNrj6YzDV" +
-              "+fl4AXEjOQRZG4SyoYwp9M2ypYU7FiQ8xAa6kQeMVpEmnS" +
-              "/ITWAND9KTHbLrZoEDBhLldss1obwkUxeBTTkTuJhwcFdRgMrNoyYVHznmOneDvLM&oip=1019354353" +
-              "&sid=845984423891020ec2c4f&token=9755&did=cb0c6d4f6b515f1902273507c75357b0&ev=1" +
-              "&ctype=20&ep=%2FZEFPmAvoL%2F8JvURVs9HQ9Ab8BBnY%2BDmubPxPbTOehOJADzH" +
-              "%2FL9aKcOrwjSfUf5ykyjoaznvODBCftGPNk9u2SuRPl9RJCSqlcVINqjlbex7qa8j6BgbB51" +
-              "%2BH1Qdt7za";
             c.load(playUrl, false);
         }
     }

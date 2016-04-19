@@ -49,15 +49,25 @@ public class VideoHomeFragment extends SherlockFragment implements View.OnClickL
         mSimpleDownloadListener = new SimpleDownloadListener() {
 
             @Override
-            public void onFinisihDownload(String url) {
+            public void onFinisihDownload(final String url) {
                 super.onFinisihDownload(url);
-                refreshItem(url);
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        refreshItem(url);
+                    }
+                });
             }
 
             @Override
-            public void onDeleteDownload(String url) {
+            public void onDeleteDownload(final String url) {
                 super.onDeleteDownload(url);
-                refreshItem(url);
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        refreshItem(url);
+                    }
+                });
             }
         };
         DownloadInfoCenter.getInstance(getActivity()).addListener(mSimpleDownloadListener);

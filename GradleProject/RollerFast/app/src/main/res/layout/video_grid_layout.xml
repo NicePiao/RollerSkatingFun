@@ -3,7 +3,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="wrap_content">
 
     <TextView
             android:id="@+id/topic_title"
@@ -15,12 +15,14 @@
             android:paddingBottom="5dp"
             />
 
-    <GridLayout
+    <com.qcw.rooler.ui.widget.GridLayout
             android:id="@+id/grid_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:background="#123456"
             />
+
 
 
 </LinearLayout>

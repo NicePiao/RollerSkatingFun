@@ -1,10 +1,10 @@
 package com.qcw.rooler.ui.widget;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.widget.GridLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.qcw.rooler.R;
@@ -51,24 +51,18 @@ public class VideoGridView extends RelativeLayout {
     public void refreshView() {
         mTopicTv.setText(mTopicData.getTitle());
         mGridLayout.removeAllViews();
-//        mGridLayout.setColumnCount(3);
-//        mGridLayout.setRowCount(
-//          mTopicData.getVideo().size() / 3 + mTopicData.getVideo().size() % 3 > 0 ? 1 : 0);
-        mGridLayout.setColumnCount(5);
-        mGridLayout.setRowCount(5);
+
+        mGridLayout.setColumnCount(3);
+        mGridLayout.setHorizontalSpacing(5);
+        mGridLayout.setVerticalSpacing(5);
+        mGridLayout.setBackgroundColor(Color.WHITE);
+        mGridLayout.setEmptyAreaColor(Color.WHITE);
+
         for (int i = 0; i < mTopicData.getVideo().size(); i++) {
             HomeConfig.Video video = mTopicData.getVideo().get(i);
             VideoItemView videoItemView = new VideoItemView(getContext());
             videoItemView.setVideoData(video);
-
-            int row = i / 3;
-            int column = i % 3;
-            GridLayout.Spec rowSpec = GridLayout.spec(2,2);
-            GridLayout.Spec columSpec = GridLayout.spec(2,2);
-            GridLayout.LayoutParams lp = new GridLayout.LayoutParams(rowSpec, columSpec);
-            mGridLayout.addView(videoItemView, lp);
-//               mGridLayout.addView(videoItemView);
-
+             mGridLayout.addView(videoItemView);
         }
     }
 

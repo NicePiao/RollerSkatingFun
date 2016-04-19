@@ -37,6 +37,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 
+import android.widget.Button;
+import com.qcw.rooler.download.DownloadInfoCenter;
+import com.qcw.rooler.download.DownloadTool;
+import com.qcw.rooler.download.SimpleDownloadListener;
+import com.qcw.rooler.ui.widget.DownloadView;
 import org.videolan.libvlc.EventHandler;
 import org.videolan.libvlc.IVideoPlayer;
 import org.videolan.libvlc.LibVLC;
@@ -113,67 +118,69 @@ public class VideoPlayerActivity extends Activity implements IVideoPlayer {
 
     // Internal intent identifier to distinguish between internal launch and
     // external intent.
-    private final static String PLAY_FROM_VIDEOGRID = "org.videolan.vlc.gui.video.PLAY_FROM_VIDEOGRID";
+    private final static String PLAY_FROM_VIDEOGRID =
+      "org.videolan.vlc.gui.video.PLAY_FROM_VIDEOGRID";
 
-    private SurfaceView mSurface;
-    private SurfaceView mSubtitlesSurface;
-    private SurfaceHolder mSurfaceHolder;
-    private SurfaceHolder mSubtitlesSurfaceHolder;
-    private FrameLayout mSurfaceFrame;
-    private MediaRouter mMediaRouter;
+    private SurfaceView                mSurface;
+    private SurfaceView                mSubtitlesSurface;
+    private SurfaceHolder              mSurfaceHolder;
+    private SurfaceHolder              mSubtitlesSurfaceHolder;
+    private FrameLayout                mSurfaceFrame;
+    private MediaRouter                mMediaRouter;
     private MediaRouter.SimpleCallback mMediaRouterCallback;
-    private SecondaryDisplay mPresentation;
-    private LibVLC mLibVLC;
-    private String mLocation;
+    private SecondaryDisplay           mPresentation;
+    private LibVLC                     mLibVLC;
+    private String                     mLocation;
 
-    private static final int SURFACE_BEST_FIT = 0;
+    private static final int SURFACE_BEST_FIT       = 0;
     private static final int SURFACE_FIT_HORIZONTAL = 1;
-    private static final int SURFACE_FIT_VERTICAL = 2;
-    private static final int SURFACE_FILL = 3;
-    private static final int SURFACE_16_9 = 4;
-    private static final int SURFACE_4_3 = 5;
-    private static final int SURFACE_ORIGINAL = 6;
-    private int mCurrentSize = SURFACE_BEST_FIT;
+    private static final int SURFACE_FIT_VERTICAL   = 2;
+    private static final int SURFACE_FILL           = 3;
+    private static final int SURFACE_16_9           = 4;
+    private static final int SURFACE_4_3            = 5;
+    private static final int SURFACE_ORIGINAL       = 6;
+    private              int mCurrentSize           = SURFACE_BEST_FIT;
 
     /** Overlay */
     private View mOverlayHeader;
     private View mOverlayOption;
     private View mOverlayProgress;
-    private static final int OVERLAY_TIMEOUT = 4000;
-    private static final int OVERLAY_INFINITE = 3600000;
-    private static final int FADE_OUT = 1;
-    private static final int SHOW_PROGRESS = 2;
-    private static final int SURFACE_SIZE = 3;
+    private static final int OVERLAY_TIMEOUT                  = 4000;
+    private static final int OVERLAY_INFINITE                 = 3600000;
+    private static final int FADE_OUT                         = 1;
+    private static final int SHOW_PROGRESS                    = 2;
+    private static final int SURFACE_SIZE                     = 3;
     private static final int AUDIO_SERVICE_CONNECTION_SUCCESS = 5;
-    private static final int AUDIO_SERVICE_CONNECTION_FAILED = 6;
-    private static final int FADE_OUT_INFO = 4;
+    private static final int AUDIO_SERVICE_CONNECTION_FAILED  = 6;
+    private static final int FADE_OUT_INFO                    = 4;
     private boolean mDragging;
     private boolean mShowing;
     private int mUiVisibility = -1;
-    private SeekBar mSeekbar;
-    private TextView mTitle;
-    private TextView mSysTime;
-    private TextView mBattery;
-    private TextView mTime;
-    private TextView mLength;
-    private TextView mInfo;
-    private ImageView mLoading;
-    private TextView mLoadingText;
+    private SeekBar     mSeekbar;
+    private TextView    mTitle;
+    private TextView    mSysTime;
+    private TextView    mBattery;
+    private TextView    mTime;
+    private TextView    mLength;
+    private TextView    mInfo;
+    private ImageView   mLoading;
+    private TextView    mLoadingText;
     private ImageButton mPlayPause;
     private ImageButton mBackward;
     private ImageButton mForward;
-    private boolean mEnableJumpButtons;
-    private boolean mEnableBrightnessGesture;
+    private boolean     mEnableJumpButtons;
+    private boolean     mEnableBrightnessGesture;
     private boolean mDisplayRemainingTime = false;
-    private int mScreenOrientation;
-    private ImageButton mAudioTrack;
-    private ImageButton mSubtitle;
-    private ImageButton mLock;
-    private ImageButton mSize;
-    private ImageButton mMenu;
-    private boolean mIsLocked = false;
-    private int mLastAudioTrack = -1;
-    private int mLastSpuTrack = -2;
+    private int          mScreenOrientation;
+    private ImageButton  mAudioTrack;
+    private ImageButton  mSubtitle;
+    private ImageButton  mLock;
+    private ImageButton  mSize;
+    private ImageButton  mMenu;
+    private DownloadView mDownloadView;
+    private boolean mIsLocked       = false;
+    private int     mLastAudioTrack = -1;
+    private int     mLastSpuTrack   = -2;
 
     /**
      * For uninterrupted switching between audio and video mode
@@ -194,25 +201,25 @@ public class VideoPlayerActivity extends Activity implements IVideoPlayer {
     private int mSarDen;
 
     //Volume
-    private AudioManager mAudioManager;
-    private int mAudioMax;
+    private AudioManager               mAudioManager;
+    private int                        mAudioMax;
     private OnAudioFocusChangeListener mAudioFocusListener;
 
     //Touch Events
-    private static final int TOUCH_NONE = 0;
-    private static final int TOUCH_VOLUME = 1;
+    private static final int TOUCH_NONE       = 0;
+    private static final int TOUCH_VOLUME     = 1;
     private static final int TOUCH_BRIGHTNESS = 2;
-    private static final int TOUCH_SEEK = 3;
-    private int mTouchAction;
-    private int mSurfaceYDisplayRange;
+    private static final int TOUCH_SEEK       = 3;
+    private int   mTouchAction;
+    private int   mSurfaceYDisplayRange;
     private float mTouchY, mTouchX, mVol;
 
     // Brightness
     private boolean mIsFirstBrightnessGesture = true;
 
     // Tracks & Subtitles
-    private Map<Integer,String> mAudioTracksList;
-    private Map<Integer,String> mSubtitleTracksList;
+    private Map<Integer, String> mAudioTracksList;
+    private Map<Integer, String> mSubtitleTracksList;
     /**
      * Used to store a selected subtitle; see onActivityResult.
      * It is possible to have multiple custom subs in one session
@@ -234,10 +241,9 @@ public class VideoPlayerActivity extends Activity implements IVideoPlayer {
             mMediaRouter = (MediaRouter) getSystemService(Context.MEDIA_ROUTER_SERVICE);
             mMediaRouterCallback = new MediaRouter.SimpleCallback() {
                 @Override
-                public void onRoutePresentationDisplayChanged(
-                        MediaRouter router, MediaRouter.RouteInfo info) {
-                    Log.d(TAG, "onRoutePresentationDisplayChanged: info="
-                            + info);
+                public void onRoutePresentationDisplayChanged(MediaRouter router,
+                  MediaRouter.RouteInfo info) {
+                    Log.d(TAG, "onRoutePresentationDisplayChanged: info=" + info);
                     removePresentation();
                 }
             };
@@ -248,20 +254,22 @@ public class VideoPlayerActivity extends Activity implements IVideoPlayer {
 
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
         if (LibVlcUtil.isICSOrLater())
-            getWindow().getDecorView().findViewById(android.R.id.content).setOnSystemUiVisibilityChangeListener(
-                    new OnSystemUiVisibilityChangeListener() {
-                        @Override
-                        public void onSystemUiVisibilityChange(int visibility) {
-                            if (visibility == mUiVisibility)
-                                return;
-                            setSurfaceSize(mVideoWidth, mVideoHeight, mVideoVisibleWidth, mVideoVisibleHeight, mSarNum, mSarDen);
-                            if (visibility == View.SYSTEM_UI_FLAG_VISIBLE && !mShowing && !isFinishing()) {
-                                showOverlay();
-                            }
-                            mUiVisibility = visibility;
-                        }
-                    }
-            );
+            getWindow().getDecorView().findViewById(
+              android.R.id.content).setOnSystemUiVisibilityChangeListener(
+              new OnSystemUiVisibilityChangeListener() {
+                  @Override
+                  public void onSystemUiVisibilityChange(int visibility) {
+                      if (visibility == mUiVisibility)
+                          return;
+                      setSurfaceSize(mVideoWidth, mVideoHeight, mVideoVisibleWidth,
+                        mVideoVisibleHeight, mSarNum, mSarDen);
+                      if (visibility == View.SYSTEM_UI_FLAG_VISIBLE && !mShowing && !isFinishing
+                        ()) {
+                          showOverlay();
+                      }
+                      mUiVisibility = visibility;
+                  }
+              });
 
         /** initialize Views an their Events */
         mOverlayHeader = findViewById(R.id.player_overlay_header);
@@ -284,7 +292,7 @@ public class VideoPlayerActivity extends Activity implements IVideoPlayer {
 
         mEnableBrightnessGesture = pref.getBoolean("enable_brightness_gesture", true);
         mScreenOrientation = Integer.valueOf(
-                pref.getString("screen_orientation_value", "4" /*SCREEN_ORIENTATION_SENSOR*/));
+          pref.getString("screen_orientation_value", "4" /*SCREEN_ORIENTATION_SENSOR*/));
 
         mEnableJumpButtons = pref.getBoolean("enable_jump_buttons", false);
         mPlayPause = (ImageButton) findViewById(R.id.player_overlay_play);
@@ -306,6 +314,8 @@ public class VideoPlayerActivity extends Activity implements IVideoPlayer {
         mSize.setOnClickListener(mSizeListener);
 
         mMenu = (ImageButton) findViewById(R.id.player_overlay_adv_function);
+
+        mDownloadView = (DownloadView) findViewById(R.id.player_overlay_download_view);
 
         mSurface = (SurfaceView) findViewById(R.id.player_surface);
         mSurfaceHolder = mSurface.getHolder();
@@ -448,6 +458,7 @@ public class VideoPlayerActivity extends Activity implements IVideoPlayer {
 
         editor.commit();
         AudioServiceController.getInstance().unbindAudioService(this);
+        mDownloadView.deinit();
     }
 
     @Override
@@ -500,6 +511,7 @@ public class VideoPlayerActivity extends Activity implements IVideoPlayer {
             // Listen for changes to media routes.
             mediaRouterAddCallback(true);
         }
+        mDownloadView.init(mLibVLC.getMediaList().getMRL(0));
     }
 
     /**
@@ -1952,14 +1964,34 @@ public class VideoPlayerActivity extends Activity implements IVideoPlayer {
         CommonDialogs.advancedOptions(this, v, MenuType.Video);
     }
 
+    /**下载相关**/
+    private SimpleDownloadListener mSimpleDownloadListener;
+
+    public void onDonwloadClick(View v) {
+        // qcw
+    }
+
+
+
+
+
+
+
+
+
+
+
+    /**下载相关**/
+
+
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     private void createPresentation() {
         if (mMediaRouter == null)
             return;
 
         // Get the current route and its presentation display.
-        MediaRouter.RouteInfo route = mMediaRouter.getSelectedRoute(
-            MediaRouter.ROUTE_TYPE_LIVE_VIDEO);
+        MediaRouter.RouteInfo route =
+          mMediaRouter.getSelectedRoute(MediaRouter.ROUTE_TYPE_LIVE_VIDEO);
 
         Display presentationDisplay = route != null ? route.getPresentationDisplay() : null;
 
@@ -1971,8 +2003,8 @@ public class VideoPlayerActivity extends Activity implements IVideoPlayer {
             try {
                 mPresentation.show();
             } catch (WindowManager.InvalidDisplayException ex) {
-                Log.w(TAG, "Couldn't show presentation!  Display was removed in "
-                        + "the meantime.", ex);
+                Log.w(TAG, "Couldn't show presentation!  Display was removed in " + "the meantime.",
+                  ex);
                 mPresentation = null;
             }
         }
@@ -1984,38 +2016,41 @@ public class VideoPlayerActivity extends Activity implements IVideoPlayer {
             return;
 
         // Dismiss the current presentation if the display has changed.
-        Log.i(TAG, "Dismissing presentation because the current route no longer "
-                + "has a presentation display.");
+        Log.i(TAG,
+          "Dismissing presentation because the current route no longer " + "has a presentation " +
+            "display.");
         mLibVLC.pause(); // Stop sending frames to avoid a crash.
         finish(); //TODO restore the video on the new display instead of closing
-        if (mPresentation != null) mPresentation.dismiss();
+        if (mPresentation != null)
+            mPresentation.dismiss();
         mPresentation = null;
     }
 
     /**
      * Listens for when presentations are dismissed.
      */
-    private final DialogInterface.OnDismissListener mOnDismissListener = new DialogInterface.OnDismissListener() {
-        @Override
-        public void onDismiss(DialogInterface dialog) {
-            if (dialog == mPresentation) {
-                Log.i(TAG, "Presentation was dismissed.");
-                mPresentation = null;
-            }
-        }
-    };
+    private final DialogInterface.OnDismissListener mOnDismissListener =
+      new DialogInterface.OnDismissListener() {
+          @Override
+          public void onDismiss(DialogInterface dialog) {
+              if (dialog == mPresentation) {
+                  Log.i(TAG, "Presentation was dismissed.");
+                  mPresentation = null;
+              }
+          }
+      };
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     private final static class SecondaryDisplay extends Presentation {
         public final static String TAG = "VLC/SecondaryDisplay";
 
-        private Context mContext;
-        private SurfaceView mSurface;
-        private SurfaceView mSubtitlesSurface;
+        private Context       mContext;
+        private SurfaceView   mSurface;
+        private SurfaceView   mSubtitlesSurface;
         private SurfaceHolder mSurfaceHolder;
         private SurfaceHolder mSubtitlesSurfaceHolder;
-        private FrameLayout mSurfaceFrame;
-        private LibVLC mLibVLC;
+        private FrameLayout   mSurfaceFrame;
+        private LibVLC        mLibVLC;
 
         public SecondaryDisplay(Context context, Display display) {
             super(context, display);
@@ -2043,7 +2078,7 @@ public class VideoPlayerActivity extends Activity implements IVideoPlayer {
             mSurfaceHolder = mSurface.getHolder();
             mSurfaceFrame = (FrameLayout) findViewById(R.id.remote_player_surface_frame);
             String chroma = pref.getString("chroma_format", "");
-            if(LibVlcUtil.isGingerbreadOrLater() && chroma.equals("YV12")) {
+            if (LibVlcUtil.isGingerbreadOrLater() && chroma.equals("YV12")) {
                 mSurfaceHolder.setFormat(ImageFormat.YV12);
             } else if (chroma.equals("RV16")) {
                 mSurfaceHolder.setFormat(PixelFormat.RGB_565);
@@ -2051,9 +2086,10 @@ public class VideoPlayerActivity extends Activity implements IVideoPlayer {
                 mSurfaceHolder.setFormat(PixelFormat.RGBX_8888);
             }
 
-            VideoPlayerActivity activity = (VideoPlayerActivity)getOwnerActivity();
+            VideoPlayerActivity activity = (VideoPlayerActivity) getOwnerActivity();
             if (activity == null) {
-                Log.e(TAG, "Failed to get the VideoPlayerActivity instance, secondary display won't work");
+                Log.e(TAG,
+                  "Failed to get the VideoPlayerActivity instance, secondary display won't work");
                 return;
             }
 
@@ -2076,7 +2112,8 @@ public class VideoPlayerActivity extends Activity implements IVideoPlayer {
      */
     private void startLoadingAnimation() {
         AnimationSet anim = new AnimationSet(true);
-        RotateAnimation rotate = new RotateAnimation(0f, 360f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        RotateAnimation rotate = new RotateAnimation(0f, 360f, Animation.RELATIVE_TO_SELF, 0.5f,
+          Animation.RELATIVE_TO_SELF, 0.5f);
         rotate.setDuration(800);
         rotate.setInterpolator(new DecelerateInterpolator());
         rotate.setRepeatCount(RotateAnimation.INFINITE);
